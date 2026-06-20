@@ -1,3 +1,11 @@
+<?php
+session_start();
+
+if (isset($_SESSION['error'])) {
+    echo '<div class="alert alert-danger">' . $_SESSION['error'] . '</div>';
+    unset($_SESSION['error']); // Remove the message after displaying it
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>

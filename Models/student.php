@@ -84,6 +84,53 @@ class Student
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+    // Get single student by ID
+    public function getById($id)
+    {
+        $stmt = $this->conn->prepare("SELECT * FROM students WHERE id = ?");
+        $stmt->execute([$id]);
+
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    // Update student
+    public function update($id, $data)
+    {
+        $sql = "UPDATE students SET
+                application_no=?,
+                first_name=?,
+                last_name=?,
+                father_name=?,
+                mother_name=?,
+                gender=?,
+                dob=?,
+                email=?,
+                phone=?,
+                address=?,
+                course=?,
+                admission_year=?,
+                status=?
+                WHERE id=?";
+
+        $stmt = $this->conn->prepare($sql);
+
+        return $stmt->execute([
+            $data['application_no'],
+            $data['first_name'],
+            $data['last_name'],
+            $data['father_name'],
+            $data['mother_name'],
+            $data['gender'],
+            $data['dob'],
+            $data['email'],
+            $data['phone'],
+            $data['address'],
+            $data['course'],
+            $data['admission_year'],
+            $data['status'],
+            $id
+        ]);
+    }
 }
 
 ?>

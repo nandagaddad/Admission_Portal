@@ -8,7 +8,7 @@
         <div class="col-sm-9 p-4 col-lg-10 p-4 ">
             <h2>Dashboard</h2>
             <div class="card">
-                <div class="card-body"> Welcome to College Admission Portal </div>
+                <div class="card-body"> Welcome to Admission Portal </div>
             </div>
         </div>      
     </div>

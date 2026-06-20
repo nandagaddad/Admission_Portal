@@ -55,6 +55,25 @@ class StudentController
 
         require "../Views/students/list.php";
     }
+    public function edit()
+    {
+        $id = $_GET['id'];
+
+        $student = $this->student->getById($id);
+
+        require "../Views/students/edit.php";
+    }
+
+    public function update()
+    {
+        $id = $_POST['id'];
+
+        if ($this->student->update($id, $_POST))
+        {
+            header("Location: ../Views/students/list.php");
+            exit();
+        }
+    }
 }
 
 $studentController = new StudentController();

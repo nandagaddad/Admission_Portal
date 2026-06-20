@@ -15,13 +15,13 @@
                 Add Student
             </a>
         </li>
-        <!--
+       
         <li class="nav-item">
-            <a class="nav-link text-white" href="../../Controllers/StudentsListController.php">
+            <a class="nav-link text-white" href="../students/list.php">
                 Student List
             </a>
         </li>
--->
+
         <li class="nav-item">
             <a href="../students/listYear.php" class="nav-link text-white" >
                 Search Students By Year

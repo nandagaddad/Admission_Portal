@@ -1,3 +1,15 @@
+<?php
+session_start();
+
+require_once '../../config/database.php';
+require_once '../../models/Student.php';
+
+$db = new Database();
+$conn = $db->connect();
+
+$studentModel = new Student($conn);
+$students = $studentModel->getAll();
+?>
 <?php include __DIR__ . '/../layouts/header.php'; ?>
 <?php include __DIR__ . '/../layouts/navbar.php'; ?>
 
@@ -43,7 +55,7 @@
                                 <th>Admission Year</th>
                                 <th>Status</th>
                                 <th>Created At</th>
-                                <th width="150">Action</th>
+                                <th>Action</th> 
                                 </tr>
                             </thead>
                             <tbody>
@@ -77,9 +89,33 @@
                                     <td><?= $student['created_at']; ?></td>
                                     <td>
                                         <a href="edit.php?id=<?= $student['id']; ?>"
-                                           class="btn btn-warning btn-sm">
+                                           class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editStudentModal">
                                             Edit
                                         </a>
+                                        <!-- The Modal -->
+                                            <div class="modal" id="editStudentModal">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+
+                                                <!-- Modal Header -->
+                                                <div class="modal-header">
+                                                    <h4 class="modal-title">Edit Student</h4>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                </div>
+
+                                                <!-- Modal body -->
+                                                <div class="modal-body">
+                                                    Modal body..
+                                                </div>
+
+                                                <!-- Modal footer -->
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                                                </div>
+
+                                                </div>
+                                            </div>
+                                            </div>
                                         <a href="delete.php?id=<?= $student['id']; ?>"
                                            class="btn btn-danger btn-sm"
                                            onclick="return confirm('Delete this student?')">
