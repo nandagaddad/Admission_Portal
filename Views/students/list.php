@@ -26,7 +26,7 @@ $students = $studentModel->getAll();
 
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <h4>Students List</h4>
-                       <!-- <a href="../Views/students/add.php" class="btn btn-primary"> Add Student </a>-->
+                        <a href="../students/add.php" class="btn btn-primary"> Add Student </a>
                     </div>
 
                 <div class="card-body">
@@ -88,41 +88,18 @@ $students = $studentModel->getAll();
                                     </td>
                                     <td><?= $student['created_at']; ?></td>
                                     <td>
-                                        <a href="edit.php?id=<?= $student['id']; ?>"
-                                           class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editStudentModal">
+                                        <button class="btn btn-warning btn-sm editBtn" 
+                                        data-bs-toggle="modal" 
+                                        data-bs-target="#editStudentModal" >
                                             Edit
-                                        </a>
-                                        <!-- The Modal -->
-                                            <div class="modal" id="editStudentModal">
-                                            <div class="modal-dialog">
-                                                <div class="modal-content">
-
-                                                <!-- Modal Header -->
-                                                <div class="modal-header">
-                                                    <h4 class="modal-title">Edit Student</h4>
-                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                                </div>
-
-                                                <!-- Modal body -->
-                                                <div class="modal-body">
-                                                    Modal body..
-                                                </div>
-
-                                                <!-- Modal footer -->
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
-                                                </div>
-
-                                                </div>
-                                            </div>
-                                            </div>
+                                        </button>
                                         <a href="delete.php?id=<?= $student['id']; ?>"
                                            class="btn btn-danger btn-sm"
                                            onclick="return confirm('Delete this student?')">
                                             Delete
                                         </a>
                                     </td>
-
+                                    
                                 </tr>
                                 <?php endforeach; ?>
                                 <?php else: ?>
@@ -137,15 +114,13 @@ $students = $studentModel->getAll();
 
                             </tbody>
                         </table>
-                    </div>                
+                    </div>   
+
                 </div>
             </div>
         </div>
-        <div class="row mb-4">
-
-            
-        </div>
     </div>
 </div>
+
 
 <?php include __DIR__ . '/../layouts/footer.php'; ?>

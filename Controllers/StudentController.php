@@ -76,7 +76,26 @@ class StudentController
     }
 }
 
-$studentController = new StudentController();
-$studentController->add();
+$controller = new StudentController();
+
+$action = $_GET['action'] ?? '';
+
+switch ($action)
+{
+    case 'store':
+        $controller->add();
+        break;
+
+    case 'edit':
+        $controller->edit();
+        break;
+
+    case 'update':
+        $controller->update();
+        break;
+
+    default:
+        $controller->index();
+}
 
 ?>

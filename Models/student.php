@@ -115,6 +115,7 @@ class Student
         $stmt = $this->conn->prepare($sql);
 
         return $stmt->execute([
+            $data['id'],
             $data['application_no'],
             $data['first_name'],
             $data['last_name'],
@@ -128,7 +129,6 @@ class Student
             $data['course'],
             $data['admission_year'],
             $data['status'],
-            $id
         ]);
     }
 }
