@@ -52,8 +52,11 @@ $students = $studentModel->getAll();
                                 <th>Email</th>
                                 <th>Phone</th>
                                 <th>Course</th>
+                                <th>Department</th>
+                                <th>Year</th>
+                                <th>Semester</th>
+                                <th>Address</th>
                                 <th>Admission Year</th>
-                                <th>Status</th>
                                 <th>Created At</th>
                                 <th>Action</th> 
                                 </tr>
@@ -71,21 +74,12 @@ $students = $studentModel->getAll();
                                     <td><?= $student['dob']; ?></td>
                                     <td><?= htmlspecialchars($student['email']); ?></td>
                                     <td><?= htmlspecialchars($student['phone']); ?></td>
-                                    <td><?= htmlspecialchars($student['course']); ?></td>                                 
+                                    <td><?= htmlspecialchars($student['course_name'] ?? ''); ?></td>
+                                    <td><?= htmlspecialchars($student['department_name'] ?? ''); ?></td>
+                                    <td><?= htmlspecialchars($student['academic_year'] ?? ''); ?></td>
+                                    <td><?= htmlspecialchars($student['semester'] ?? ''); ?></td>
+                                    <td><?= htmlspecialchars($student['address']); ?></td>
                                     <td><?= $student['admission_year']; ?></td>
-                                    <td>
-                                        <?php if($student['status']=="Approved"): ?>
-                                        <span class="badge bg-success">
-                                            Approved
-                                        </span>
-
-                                        <?php else: ?>
-                                        <span class="badge bg-warning text-dark">
-                                            Pending
-                                        </span>
-
-                                        <?php endif; ?>
-                                    </td>
                                     <td><?= $student['created_at']; ?></td>
                                     <td>
                                         <button class="btn btn-warning btn-sm editBtn" 

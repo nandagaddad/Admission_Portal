@@ -45,8 +45,11 @@ if (!isset($students))
                                 <th>Email</th>
                                 <th>Phone</th>
                                 <th>Course</th>
+                                <th>Department</th>
+                                <th>Year</th>
+                                <th>Semester</th>
+                                <th>Address</th>
                                 <th>Admission Year</th>
-                                <th>Status</th>
                             </tr>
                         </thead>
 
@@ -61,9 +64,12 @@ if (!isset($students))
                                 <td><?= $student['gender'] ?></td>
                                 <td><?= $student['email'] ?></td>
                                 <td><?= $student['phone'] ?></td>
-                                <td><?= $student['course'] ?></td>
+                                <td><?= htmlspecialchars($student['course_name'] ?? '') ?></td>
+                                <td><?= htmlspecialchars($student['department_name'] ?? '') ?></td>
+                                <td><?= htmlspecialchars($student['academic_year'] ?? '') ?></td>
+                                <td><?= htmlspecialchars($student['semester'] ?? '') ?></td>
+                                <td><?= $student['address'] ?></td>
                                 <td><?= $student['admission_year'] ?></td>
-                                <td><?= $student['status'] ?></td>
                             </tr>
 
                             <?php endforeach; ?>

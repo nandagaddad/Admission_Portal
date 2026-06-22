@@ -71,7 +71,11 @@ class Student
     }
     public function getAll()
     {
-        $sql = "SELECT * FROM students ORDER BY id DESC";
+        $sql = "SELECT s.*, c.course_name, d.department_name
+                FROM students AS s
+                LEFT JOIN courses AS c ON c.id = s.course_id
+                LEFT JOIN departments AS d ON d.id = s.department_id
+                ORDER BY s.id DESC";
 
         $stmt = $this->conn->prepare($sql);
         $stmt->execute();
@@ -100,9 +104,12 @@ class Student
     }
     public function searchByYear($year)
     {
-        $sql = "SELECT * FROM students
-                WHERE admission_year = :year
-                ORDER BY id DESC";
+        $sql = "SELECT s.*, c.course_name, d.department_name
+                FROM students AS s
+                LEFT JOIN courses AS c ON c.id = s.course_id
+                LEFT JOIN departments AS d ON d.id = s.department_id
+                WHERE s.admission_year = :year
+                ORDER BY s.id DESC";
 
         $stmt = $this->conn->prepare($sql);
         $stmt->bindParam(':year', $year);

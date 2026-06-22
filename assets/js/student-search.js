@@ -7,7 +7,7 @@ function searchStudent()
     tbody.innerHTML =
     `
     <tr>
-        <td colspan="10" class="text-center">
+        <td colspan="12" class="text-center">
             Loading...
         </td>
     </tr>
@@ -26,7 +26,7 @@ function searchStudent()
         if(xhr.readyState === 4)
         {
             if(xhr.status === 200)
-            {   //console.log(xhr.responseText);
+            {   
                 
                 let data = JSON.parse(xhr.responseText);
 
@@ -35,6 +35,11 @@ function searchStudent()
                 if(data.length > 0)
                 {
                     data.forEach(student => {
+                        const address = student.address ?? '';
+                        const courseName = student.course_name ?? '';
+                        const departmentName = student.department_name ?? '';
+                        const academicYear = student.academic_year ?? '';
+                        const semester = student.semester ?? '';
 
                         output +=
                         `
@@ -54,11 +59,18 @@ function searchStudent()
 
                             <td>${student.phone}</td>
 
-                            <td>${student.course}</td>
+                            <td>${courseName}</td>
+
+                            <td>${departmentName}</td>
+
+                            <td>${academicYear}</td>
+
+                            <td>${semester}</td>
+
+                            <td>${address}</td>
 
                             <td>${student.admission_year}</td>
-
-                            <td>${student.status}</td>
+                            
                         </tr>
                         `;
                     });
@@ -68,7 +80,7 @@ function searchStudent()
                     output =
                     `
                     <tr>
-                        <td colspan="9"
+                        <td colspan="12"
                             class="text-center text-danger">
 
                             No Students Found
