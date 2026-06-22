@@ -1,5 +1,6 @@
 <?php
 session_start();
+die();
 
 require_once "../Config/database.php";
 require_once "../Models/Student.php";

@@ -1,5 +1,6 @@
 <?php
 
+session_start();
 require_once "../Config/database.php";
 require_once "../Models/Student.php";
 
@@ -29,15 +30,18 @@ class StudentController
                 'email' => trim($_POST['email']),
                 'phone' => trim($_POST['phone']),
                 'address' => trim($_POST['address']),
-                'course' => trim($_POST['course']),
+                /*'course' => trim($_POST['course']),*/
                 'admission_year' => $_POST['admission_year'],
-                'status' => $_POST['status']
+                /*'status' => $_POST['status'],*/
+                'course_id' => $_POST['course'],
+                'department_id' => $_POST['department'],
+                'academic_year' => $_POST['year'],
+                'semester' => $_POST['semester']
             ];
 
             if ($this->student->create($data))
             {
                 $_SESSION['success'] = "Student added successfully";
-
                 header("Location: /Admission_Portal/Views/dashboard/index.php");
                 exit();
             }
@@ -49,11 +53,30 @@ class StudentController
 
         require "../Views/students/add.php";
     }
+
+    public function getDepartments()
+    {
+        $course_id = $_GET['course_id'];
+
+        $departments = $this->student->getDepartments($course_id);
+
+        header('Content-Type: application/json');
+        echo json_encode($departments);
+    }
     public function index()
     {
         $students = $this->student->getAll();
 
         require "../Views/students/list.php";
+    }
+    public function getYear()
+    {
+        $course_id = $_GET['course_id'];
+
+        $years = $this->student->getYear($course_id);
+
+        header('Content-Type: application/json');
+        echo json_encode($years);
     }
     public function edit()
     {
@@ -86,6 +109,14 @@ switch ($action)
         $controller->add();
         break;
 
+    case 'getDepartments':
+        $controller->getDepartments(); 
+        break;
+    
+    case 'getYear':
+        $controller->getYear();
+        break;
+        
     case 'edit':
         $controller->edit();
         break;
@@ -97,5 +128,5 @@ switch ($action)
     default:
         $controller->index();
 }
-
+/* find any bugs present in these 3 files add.php, studentcontroller.php, student.php */
 ?>

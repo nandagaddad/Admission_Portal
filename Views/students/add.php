@@ -1,5 +1,15 @@
 <?php include '../layouts/header.php'; ?>
 <?php include '../layouts/navbar.php'; ?>
+<?php
+require_once '../../Config/Database.php';
+require_once '../../models/Student.php';
+$db = new Database();
+$conn = $db->connect();
+$Courses = $conn->query(
+    "SELECT * FROM courses"
+);
+
+?>
 <div class="Container-fluid">
     <div class="row">
         <div class="col-md-3 col-lg-2 p-0 d-md-block bg-dark sidebar collapse" id="sidebar">
@@ -33,6 +43,33 @@
                     <form action="../../controllers/StudentController.php?action=store" method="POST">
 
                         <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Course</label>
+                                <select class="form-select" id="course" name="course" onchange="getDepartments(this.value); getYear(this.value);" required>
+                                    <option value="">Select Course</option>
+                                    <?php while ($row = $Courses->fetch(PDO::FETCH_ASSOC)) : ?>
+                                    <option value="<?php echo $row['id']; ?>"><?php echo $row['course_name']; ?></option>
+                                    <?php endwhile; ?>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Department</label>
+                                <select class="form-select" id="department" name="department" required>
+                                    <option value="">Select Department</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Year</label>
+                                <select class="form-select" id="year" name="year" onchange="getSemester(this.value)" required>
+                                    <option value="">Select Year</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Semester</label>
+                                <select class="form-select" id="semester" name="semester" required>
+                                    <option value="">Select Semester</option>
+                                </select>
+                            </div>
 
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Application No</label>
@@ -87,11 +124,6 @@
                             </div>
 
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">Course</label>
-                                <input type="text" name="course" class="form-control" required>
-                            </div>
-
-                            <div class="col-md-6 mb-3">
                                 <label class="form-label">Admission Year</label>
                                 <input type="number"
                                        name="admission_year"
@@ -107,13 +139,6 @@
                                 <textarea name="address" class="form-control" rows="3" required></textarea>
                             </div>
 
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label">Status</label>
-                                <select name="status" class="form-select">
-                                    <option value="Pending">Pending</option>
-                                    <option value="Approved">Approved</option>
-                                </select>
-                            </div>
 
                         </div>
                         <div class="d-flex flex-row-reverse">

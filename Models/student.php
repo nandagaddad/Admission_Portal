@@ -24,9 +24,11 @@ class Student
                     email,
                     phone,
                     address,
-                    course,
                     admission_year,
-                    status
+                    course_id,
+                    department_id,
+                    academic_year,
+                    semester
                 )
                 VALUES
                 (
@@ -40,9 +42,11 @@ class Student
                     :email,
                     :phone,
                     :address,
-                    :course,
                     :admission_year,
-                    :status
+                    :course_id,
+                    :department_id,
+                    :academic_year,
+                    :semester
                 )";
 
         $stmt = $this->conn->prepare($sql);
@@ -58,9 +62,11 @@ class Student
             ':email' => $data['email'],
             ':phone' => $data['phone'],
             ':address' => $data['address'],
-            ':course' => $data['course'],
             ':admission_year' => $data['admission_year'],
-            ':status' => $data['status']
+            ':course_id' => $data['course_id'],
+            ':department_id' => $data['department_id'],
+            ':academic_year' =>$data['academic_year'],
+            ':semester' =>$data['semester']
         ]);
     }
     public function getAll()
@@ -68,6 +74,26 @@ class Student
         $sql = "SELECT * FROM students ORDER BY id DESC";
 
         $stmt = $this->conn->prepare($sql);
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    public function getDepartments($CourseID)
+    {
+        $sql = "SELECT * FROM departments WHERE course_id = :course_id ORDER BY id ASC";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindValue(':course_id', $CourseID, PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    public function getYear($CourseID)
+    {
+        $sql = "SELECT duration_years FROM courses WHERE id = :course_id";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindValue(':course_id', $CourseID, PDO::PARAM_INT);
         $stmt->execute();
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -92,8 +118,6 @@ class Student
 
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
-
-    // Update student
     public function update($id, $data)
     {
         $sql = "UPDATE students SET

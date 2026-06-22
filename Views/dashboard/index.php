@@ -1,3 +1,4 @@
+<?php session_start(); ?>
 <?php include '../layouts/header.php'; ?>
 <?php include '../layouts/navbar.php'; ?>
 <div class="Container-fluid">
@@ -6,6 +7,17 @@
             <?php include '../layouts/sidebar.php'; ?>
         </div>
         <div class="col-sm-9 p-4 col-lg-10 p-4 ">
+            <?php if (isset($_SESSION['success'])) : ?>
+                <div class="alert alert-success">
+                    <?= htmlspecialchars($_SESSION['success']); ?>
+                </div>
+                <?php unset($_SESSION['success']); ?>
+            <?php elseif (isset($_SESSION['error'])) : ?>
+                <div class="alert alert-danger">
+                    <?= htmlspecialchars($_SESSION['error']); ?>
+                </div>
+                <?php unset($_SESSION['error']); ?>
+            <?php endif; ?>
             <h2>Dashboard</h2>
             <div class="card">
                 <div class="card-body"> Welcome to Admission Portal </div>
