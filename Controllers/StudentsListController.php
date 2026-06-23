@@ -1,9 +1,10 @@
 <?php
-session_start();
-die();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
-require_once "../Config/database.php";
-require_once "../Models/Student.php";
+require_once __DIR__ . "/../Config/Database.php";
+require_once __DIR__ . "/../Models/student.php";
 
 class StudentsListController
 {

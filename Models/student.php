@@ -166,6 +166,13 @@ class Student
             $id,
         ]);
     }
+
+    public function delete($id)
+    {
+        $sql = "DELETE FROM students WHERE id = ?";
+        $stmt = $this->conn->prepare($sql);
+        return $stmt->execute([$id]);
+    }
 }
 
 ?>

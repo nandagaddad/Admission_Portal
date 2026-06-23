@@ -1,10 +1,12 @@
 
 <?php
 
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
-require "../config/Database.php";
-require "../models/Admin.php";
+require __DIR__ . "/../Config/Database.php";
+require __DIR__ . "/../Models/Admin.php";
 
 class AuthController
 {

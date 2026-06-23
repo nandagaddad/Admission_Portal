@@ -1,8 +1,10 @@
 <?php
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
-require_once '../../config/database.php';
-require_once '../../models/Student.php';
+require_once __DIR__ . '/../../Config/Database.php';
+require_once __DIR__ . '/../../Models/student.php';
 
 $db = new Database();
 $conn = $db->connect();
@@ -109,11 +111,14 @@ $Courses = $conn->query(
                                             data-student-semester="<?= htmlspecialchars($student['semester']); ?>">
                                             Edit
                                         </button>
-                                        <a href="delete.php?id=<?= $student['id']; ?>"
-                                           class="btn btn-danger btn-sm"
-                                           onclick="return confirm('Delete this student?')">
+                                        <button
+                                           class="btn btn-danger btn-sm deleteBtn"
+                                           data-bs-toggle="modal"
+                                           data-bs-target="#deleteStudentModal"
+                                           data-student-id="<?= $student['id']; ?>"
+                                           data-student-name="<?= htmlspecialchars($student['first_name'].' '.$student['last_name']); ?>">
                                             Delete
-                                        </a>
+                                        </button>
                                     </td>
                                     
                                 </tr>
@@ -235,5 +240,44 @@ $Courses = $conn->query(
         </div>
     </div>
 </div>
+
+<!-- Delete Student Modal -->
+<div class="modal" id="deleteStudentModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h4 class="modal-title">Delete Student</h4>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete this student?</p>
+                <p><strong>Student Name:</strong> <span id="deleteStudentName"></span></p>
+                <p class="text-danger"><strong>Warning:</strong> This action cannot be undone.</p>
+            </div>
+            <div class="modal-footer">
+                <form action="../../controllers/StudentController.php?action=delete" method="POST" id="deleteForm">
+                    <input type="hidden" name="id" id="deleteStudentId">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-danger">Delete Student</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Handle delete button click
+    document.addEventListener('DOMContentLoaded', function() {
+        const deleteButtons = document.querySelectorAll('.deleteBtn');
+        deleteButtons.forEach(btn => {
+            btn.addEventListener('click', function() {
+                const studentId = this.getAttribute('data-student-id');
+                const studentName = this.getAttribute('data-student-name');
+                document.getElementById('deleteStudentId').value = studentId;
+                document.getElementById('deleteStudentName').textContent = studentName;
+            });
+        });
+    });
+</script>
 
 <?php include __DIR__ . '/../layouts/footer.php'; ?>

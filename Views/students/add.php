@@ -1,8 +1,11 @@
 <?php include '../layouts/header.php'; ?>
 <?php include '../layouts/navbar.php'; ?>
 <?php
-require_once '../../Config/Database.php';
-require_once '../../models/Student.php';
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+require_once __DIR__ . '/../../Config/Database.php';
+require_once __DIR__ . '/../../Models/student.php';
 $db = new Database();
 $conn = $db->connect();
 $Courses = $conn->query(

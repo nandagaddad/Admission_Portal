@@ -1,8 +1,10 @@
 <?php
 
-session_start();
-require_once "../Config/database.php";
-require_once "../Models/Student.php";
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+require_once __DIR__ . "/../Config/Database.php";
+require_once __DIR__ . "/../Models/student.php";
 
 class StudentController
 {
@@ -97,6 +99,27 @@ class StudentController
             exit();
         }
     }
+
+    public function delete()
+    {
+        if ($_SERVER['REQUEST_METHOD'] == "POST")
+        {
+            $id = $_POST['id'];
+
+            if ($this->student->delete($id))
+            {
+                $_SESSION['success'] = "Student deleted successfully";
+                header("Location: ../Views/students/list.php");
+                exit();
+            }
+            else
+            {
+                $_SESSION['error'] = "Failed to delete student";
+                header("Location: ../Views/students/list.php");
+                exit();
+            }
+        }
+    }
 }
 
 $controller = new StudentController();
@@ -123,6 +146,10 @@ switch ($action)
 
     case 'update':
         $controller->update();
+        break;
+
+    case 'delete':
+        $controller->delete();
         break;
 
     default:
