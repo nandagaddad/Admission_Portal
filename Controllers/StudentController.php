@@ -128,5 +128,4 @@ switch ($action)
     default:
         $controller->index();
 }
-/* find any bugs present in these 3 files add.php, studentcontroller.php, student.php */
 ?>

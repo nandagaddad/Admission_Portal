@@ -128,25 +128,26 @@ class Student
     public function update($id, $data)
     {
         $sql = "UPDATE students SET
-                application_no=?,
-                first_name=?,
-                last_name=?,
-                father_name=?,
-                mother_name=?,
-                gender=?,
-                dob=?,
-                email=?,
-                phone=?,
-                address=?,
-                course=?,
-                admission_year=?,
-                status=?
-                WHERE id=?";
+                application_no = ?,
+                first_name = ?,
+                last_name = ?,
+                father_name = ?,
+                mother_name = ?,
+                gender = ?,
+                dob = ?,
+                email = ?,
+                phone = ?,
+                address = ?,
+                course_id = ?,
+                department_id = ?,
+                academic_year = ?,
+                semester = ?,
+                admission_year = ?
+                WHERE id = ?";
 
         $stmt = $this->conn->prepare($sql);
 
         return $stmt->execute([
-            $data['id'],
             $data['application_no'],
             $data['first_name'],
             $data['last_name'],
@@ -158,8 +159,11 @@ class Student
             $data['phone'],
             $data['address'],
             $data['course'],
+            $data['department'],
+            $data['year'],
+            $data['semester'],
             $data['admission_year'],
-            $data['status'],
+            $id,
         ]);
     }
 }
