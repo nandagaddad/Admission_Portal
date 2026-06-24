@@ -1,6 +1,6 @@
-<nav class="navbar navbar-dark bg-primary sticky-top">
+<nav class="navbar navbar-dark bg-primary header sticky-top">
     <div class="container-fluid">
-        <!-- Toggle button for mobile -->
+        <!--Toggle button for mobile-->
         <button class="navbar-toggler" type="button" 
             data-bs-toggle="collapse"
             data-bs-target="#sidebar" >

@@ -13,14 +13,14 @@ $Courses = $conn->query(
 );
 
 ?>
-<div class="Container-fluid">
+<div class="container-fluid">
     <div class="row">
         <div class="col-md-3 col-lg-2 p-0 d-md-block bg-dark sidebar collapse" id="sidebar">
             <?php include '../layouts/sidebar.php'; ?>
         </div>
 
         <!-- Add Student Form -->
-        <div class="col-md-9 col-lg-10 p-4">
+        <div class="content">
 
             <div class="card shadow">
                 <div class="card-header">
@@ -46,7 +46,7 @@ $Courses = $conn->query(
                     <form action="../../controllers/StudentController.php?action=store" method="POST">
 
                         <div class="row">
-                            <div class="col-md-6 mb-3">
+                            <div class="col-md-6 mb-3 form-group required">
                                 <label class="form-label">Course</label>
                                 <select class="form-select" id="course" name="course" onchange="getDepartments(this.value); getYear(this.value);" required>
                                     <option value="">Select Course</option>
@@ -55,33 +55,33 @@ $Courses = $conn->query(
                                     <?php endwhile; ?>
                                 </select>
                             </div>
-                            <div class="col-md-6 mb-3">
+                            <div class="col-md-6 mb-3 form-group required">
                                 <label class="form-label">Department</label>
                                 <select class="form-select" id="department" name="department" required>
                                     <option value="">Select Department</option>
                                 </select>
                             </div>
-                            <div class="col-md-6 mb-3">
+                            <div class="col-md-6 mb-3 form-group required">
                                 <label class="form-label">Year</label>
                                 <select class="form-select" id="year" name="year" onchange="getSemester(this.value)" required>
                                     <option value="">Select Year</option>
                                 </select>
                             </div>
-                            <div class="col-md-6 mb-3">
+                            <div class="col-md-6 mb-3 form-group required">
                                 <label class="form-label">Semester</label>
                                 <select class="form-select" id="semester" name="semester" required>
                                     <option value="">Select Semester</option>
                                 </select>
                             </div>
 
-                            <div class="col-md-6 mb-3">
+                            <div class="col-md-6 mb-3 form-group required">
                                 <label class="form-label">Application No</label>
                                 <input type="text" name="application_no" class="form-control" required>
                             </div>
 
                             <div class="col w-100 mb-3"></div>
                             
-                            <div class="col-md-6 mb-3">
+                            <div class="col-md-6 mb-3 form-group required">
                                 <label class="form-label">First Name</label>
                                 <input type="text" name="first_name" class="form-control" required>
                             </div>
@@ -101,7 +101,7 @@ $Courses = $conn->query(
                                 <input type="text" name="mother_name" class="form-control">
                             </div>
 
-                            <div class="col-md-6 mb-3">
+                            <div class="col-md-6 mb-3 form-group required">
                                 <label class="form-label">Gender</label>
                                 <select name="gender" class="form-select" required>
                                     <option value="">Select Gender</option>
@@ -111,22 +111,22 @@ $Courses = $conn->query(
                                 </select>
                             </div>
 
-                            <div class="col-md-6 mb-3">
+                            <div class="col-md-6 mb-3 form-group required">
                                 <label class="form-label">Date of Birth</label>
                                 <input type="date" name="dob" class="form-control" required>
                             </div>
 
-                            <div class="col-md-6 mb-3">
+                            <div class="col-md-6 mb-3 form-group required">
                                 <label class="form-label">Email</label>
                                 <input type="email" name="email" class="form-control" required>
                             </div>
 
-                            <div class="col-md-6 mb-3">
+                            <div class="col-md-6 mb-3 form-group required">
                                 <label class="form-label">Mobile Number</label>
                                 <input type="text" name="phone" class="form-control" maxlength="10" required>
                             </div>
 
-                            <div class="col-md-6 mb-3">
+                            <div class="col-md-6 mb-3 form-group required">
                                 <label class="form-label">Admission Year</label>
                                 <input type="number"
                                        name="admission_year"
@@ -137,7 +137,7 @@ $Courses = $conn->query(
                                        required>
                             </div>
 
-                            <div class="col-md-6 mb-3">
+                            <div class="col-md-6 mb-3 form-group required">
                                 <label class="form-label">Address</label>
                                 <textarea name="address" class="form-control" rows="3" required></textarea>
                             </div>

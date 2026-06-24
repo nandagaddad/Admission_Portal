@@ -8,14 +8,14 @@ if (!isset($students))
 }
 
 ?>
-<div class="Container-fluid">
+<div class="container-fluid">
     <div class="row">
         <div class="col-md-3 col-lg-2 p-0 d-md-block bg-dark sidebar collapse" id="sidebar">
             <?php include '../layouts/sidebar.php'; ?>
         </div>
 
         <!-- Search by Admission Year Form -->
-        <div class="col-md-9 px-md-4">
+        <div class="content">
                 <div class="card shadow-sm">
                     <div class="card-header bg-primary text-white">
                         Search Students by Admission Year

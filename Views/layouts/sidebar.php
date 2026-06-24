@@ -1,4 +1,4 @@
-<nav class="navbar navbar-dark bg-dark flex-column align-items-start  p-3">
+<nav class="navbar navbar-dark bg-dark flex-column align-items-start p-3 ">
 
     <h4 class="text-white mb-4">Menu</h4>
 
@@ -21,7 +21,16 @@
                 Student List
             </a>
         </li>
-
+        <li class="nav-item">
+            <a class="nav-link text-white" href="../Courses/addCourses.php">
+                Add Course
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-white" href="../Courses/list.php">
+                Courses List
+            </a>
+        </li>
         <li class="nav-item">
             <a href="../students/listYear.php" class="nav-link text-white" >
                 Search Students By Year

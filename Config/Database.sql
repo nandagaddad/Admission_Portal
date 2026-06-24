@@ -35,3 +35,20 @@ status ENUM('Pending','Approved'),
 
 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+
+-- Courses and Departments tables
+CREATE TABLE IF NOT EXISTS courses (
+	id INT PRIMARY KEY AUTO_INCREMENT,
+	course_name VARCHAR(255) NOT NULL,
+	duration_years INT DEFAULT 1,
+	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS departments (
+	id INT PRIMARY KEY AUTO_INCREMENT,
+	course_id INT NOT NULL,
+	department_name VARCHAR(255) NOT NULL,
+	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE CASCADE
+);
