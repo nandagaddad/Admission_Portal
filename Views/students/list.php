@@ -40,8 +40,9 @@ $Courses = $conn->query(
                 <div class="card-body">
 
                     <?php if(isset($_SESSION['success'])) : ?>
-                        <div class="alert alert-success">
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
                             <?= $_SESSION['success']; ?>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
                     <?php unset($_SESSION['success']); ?>
                     <?php endif; ?>
@@ -90,7 +91,7 @@ $Courses = $conn->query(
                                     <td><?= $student['admission_year']; ?></td>
                                     <td><?= $student['created_at']; ?></td>
                                     <td>
-                                        <button class="btn btn-warning btn-sm editBtn"
+                                        <button class="btn btn-warning btn-sm editStudentBtn"
                                             data-bs-toggle="modal"
                                             data-bs-target="#editStudentModal"
                                             data-student-id="<?= $student['id']; ?>"
@@ -143,7 +144,7 @@ $Courses = $conn->query(
     </div>
 </div>
 <!-- The Edit Student Modal -->
-<div class="modal" id="editStudentModal">
+<div class="modal" id="editStudentModal" tabindex="-1">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
@@ -242,7 +243,7 @@ $Courses = $conn->query(
 </div>
 
 <!-- Delete Student Modal -->
-<div class="modal" id="deleteStudentModal">
+<div class="modal" id="deleteStudentModal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header bg-danger text-white">

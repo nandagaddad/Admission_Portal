@@ -80,7 +80,7 @@ class Course
 
     public function updateWithDepartments($id, $courseName, $durationYears, $departments = [])
     {
-        // Clean departments
+        // Clean departments and deduplicate
         $cleanDepts = [];
         if (is_array($departments)) {
             foreach ($departments as $d) {
@@ -88,9 +88,10 @@ class Course
                 if ($t !== '') $cleanDepts[] = $t;
             }
         }
+        $cleanDepts = array_values(array_unique($cleanDepts));
 
         if (count($cleanDepts) === 0) {
-            return false;
+            return ['success' => false, 'error' => 'At least one department is required.'];
         }
 
         try {
@@ -103,31 +104,79 @@ class Course
                 ':id' => $id
             ]);
 
-            // delete existing departments and re-insert
-            $ddelete = $this->conn->prepare("DELETE FROM departments WHERE course_id = :course_id");
-            $ddelete->execute([':course_id' => $id]);
+            $existingStmt = $this->conn->prepare("SELECT id, department_name FROM departments WHERE course_id = :course_id");
+            $existingStmt->execute([':course_id' => $id]);
+            $existingDepartments = $existingStmt->fetchAll(PDO::FETCH_ASSOC);
 
-            $dsql = "INSERT INTO departments (course_id, department_name) VALUES (:course_id, :department_name)";
-            $dstmt = $this->conn->prepare($dsql);
-            foreach ($cleanDepts as $dept) {
-                $dstmt->execute([
-                    ':course_id' => $id,
-                    ':department_name' => $dept
-                ]);
+            $existingNames = array_column($existingDepartments, 'department_name');
+            $removedNames = array_diff($existingNames, $cleanDepts);
+            $addedNames = array_diff($cleanDepts, $existingNames);
+
+            if (!empty($removedNames)) {
+                $removedIds = [];
+                foreach ($existingDepartments as $dept) {
+                    if (in_array($dept['department_name'], $removedNames, true)) {
+                        $removedIds[] = $dept['id'];
+                    }
+                }
+
+                if (!empty($removedIds)) {
+                    $placeholders = implode(',', array_fill(0, count($removedIds), '?'));
+                    $countSql = "SELECT COUNT(*) FROM students WHERE course_id = ? AND department_id IN ($placeholders)";
+                    $countStmt = $this->conn->prepare($countSql);
+                    $countStmt->execute(array_merge([$id], $removedIds));
+                    $count = (int) $countStmt->fetchColumn();
+
+                    if ($count > 0) {
+                        $this->conn->rollBack();
+                        return [
+                            'success' => false,
+                            'error' => 'Cannot remove a department while students are still assigned to it. Remove or reassign those students first.'
+                        ];
+                    }
+
+                    $deleteSql = "DELETE FROM departments WHERE course_id = ? AND id IN ($placeholders)";
+                    $deleteStmt = $this->conn->prepare($deleteSql);
+                    $deleteStmt->execute(array_merge([$id], $removedIds));
+                }
+            }
+
+            if (!empty($addedNames)) {
+                $dsql = "INSERT INTO departments (course_id, department_name) VALUES (:course_id, :department_name)";
+                $dstmt = $this->conn->prepare($dsql);
+                foreach ($addedNames as $dept) {
+                    $dstmt->execute([
+                        ':course_id' => $id,
+                        ':department_name' => $dept
+                    ]);
+                }
             }
 
             $this->conn->commit();
-            return true;
+            return ['success' => true];
         } catch (Exception $e) {
             $this->conn->rollBack();
-            return false;
+            return ['success' => false, 'error' => 'Failed to update course'];
         }
     }
 
     public function delete($id)
     {
-        $stmt = $this->conn->prepare("DELETE FROM {$this->table} WHERE id = :id");
-        return $stmt->execute([':id' => $id]);
+        try {
+            $this->conn->beginTransaction();
+
+            $dstmt = $this->conn->prepare("DELETE FROM departments WHERE course_id = :course_id");
+            $dstmt->execute([':course_id' => $id]);
+
+            $stmt = $this->conn->prepare("DELETE FROM {$this->table} WHERE id = :id");
+            $result = $stmt->execute([':id' => $id]);
+
+            $this->conn->commit();
+            return $result;
+        } catch (Exception $e) {
+            $this->conn->rollBack();
+            return false;
+        }
     }
 
 }

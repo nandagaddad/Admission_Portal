@@ -32,10 +32,16 @@ $courses = $courseModel->getAll();
                 <div class="card-body">
 
                     <?php if(isset($_SESSION['success'])) : ?>
-                        <div class="alert alert-success"><?php echo $_SESSION['success']; unset($_SESSION['success']); ?></div>
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            <?php echo $_SESSION['success']; unset($_SESSION['success']); ?>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
                     <?php endif; ?>
                     <?php if(isset($_SESSION['error'])) : ?>
-                        <div class="alert alert-danger"><?php echo $_SESSION['error']; unset($_SESSION['error']); ?></div>
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <?php echo $_SESSION['error']; unset($_SESSION['error']); ?>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
                     <?php endif; ?>
 
                     <div class="table-responsive">
@@ -88,7 +94,7 @@ $courses = $courseModel->getAll();
 </div>
 
 <!-- Edit Modal -->
-<div class="modal" id="editCourseModal">
+<div class="modal" id="editCourseModal" tabindex="-1">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -99,15 +105,15 @@ $courses = $courseModel->getAll();
                 <form id="editCourseForm" method="POST" action="../../controllers/CoursesController.php?action=update">
                     <input type="hidden" name="id" id="editCourseId">
                     <div class="row g-3">
-                        <div class="col-md-6">
+                        <div class="col-md-6 form-group required">
                             <label class="form-label">Course Name</label>
                             <input type="text" name="course_name" id="editCourseName" class="form-control" required>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-3 form-group required">
                             <label class="form-label">Duration (years)</label>
                             <input type="number" name="duration_years" id="editDuration" class="form-control" min="1" required>
                         </div>
-                        <div class="col-12">
+                        <div class="col-12 form-group required">
                             <label class="form-label">Departments</label>
                             <div id="edit-departments-list"></div>
                             <button type="button" id="edit-add-dept" class="btn btn-sm btn-secondary mt-2">Add Department</button>
@@ -124,7 +130,7 @@ $courses = $courseModel->getAll();
 </div>
 
 <!-- Delete Modal -->
-<div class="modal" id="deleteCourseModal">
+<div class="modal" id="deleteCourseModal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header bg-danger text-white">

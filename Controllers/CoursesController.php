@@ -98,9 +98,12 @@ class CoursesController
             exit();
         }
 
-        $ok = $this->courseModel->updateWithDepartments($id, $courseName, $duration, $cleanDepts);
-        if ($ok) $_SESSION['success'] = 'Course updated successfully';
-        else $_SESSION['error'] = 'Failed to update course';
+        $result = $this->courseModel->updateWithDepartments($id, $courseName, $duration, $cleanDepts);
+        if (is_array($result) && $result['success']) {
+            $_SESSION['success'] = 'Course updated successfully';
+        } else {
+            $_SESSION['error'] = $result['error'] ?? 'Failed to update course';
+        }
 
         header('Location: ../Views/Courses/list.php');
         exit();
@@ -120,7 +123,7 @@ class CoursesController
         if ($this->courseModel->delete($id)) {
             $_SESSION['success'] = 'Course deleted successfully';
         } else {
-            $_SESSION['error'] = 'Failed to delete course';
+            $_SESSION['error'] = 'Failed to delete course. One or more students are currently enrolled in this course.';
         }
 
         header('Location: ../Views/Courses/list.php');

@@ -24,11 +24,17 @@ $conn = $db->connect();
                 <div class="card-body">
 
                     <?php if (isset($_SESSION['success'])) : ?>
-                        <div class="alert alert-success"><?php echo $_SESSION['success']; unset($_SESSION['success']); ?></div>
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            <?php echo $_SESSION['success']; unset($_SESSION['success']); ?>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
                     <?php endif; ?>
 
                     <?php if (isset($_SESSION['error'])) : ?>
-                        <div class="alert alert-danger"><?php echo $_SESSION['error']; unset($_SESSION['error']); ?></div>
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <?php echo $_SESSION['error']; unset($_SESSION['error']); ?>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
                     <?php endif; ?>
 
                     <form action="../../controllers/CoursesController.php?action=store" method="POST">
@@ -43,7 +49,7 @@ $conn = $db->connect();
                                 <input type="number" name="duration_years" class="form-control" min="1" value="1" required>
                             </div>
 
-                            <div class="col-12 mb-3">
+                            <div class="col-12 mb-3 form-group required">
                                 <label class="form-label">Departments</label>
                                 <div id="departments-list">
                                     <div class="input-group mb-2">

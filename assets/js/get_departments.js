@@ -202,7 +202,7 @@ function setEditModalValues(button) {
     }
 
     document.addEventListener('DOMContentLoaded', function() {
-        var editButtons = document.querySelectorAll('.editBtn');
+        var editButtons = document.querySelectorAll('.editStudentBtn');
         editButtons.forEach(function(button) {
             button.addEventListener('click', function() {
                 setEditModalValues(button);

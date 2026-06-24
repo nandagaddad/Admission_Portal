@@ -2,7 +2,7 @@
 session_start();
 
 if (isset($_SESSION['error'])) {
-    echo '<div class="alert alert-danger">' . $_SESSION['error'] . '</div>';
+    echo '<div class="alert alert-danger alert-dismissible fade show" role="alert">' . $_SESSION['error'] . '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>';
     unset($_SESSION['error']); // Remove the message after displaying it
 }
 ?>
@@ -12,6 +12,7 @@ if (isset($_SESSION['error'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+    <link rel="stylesheet" href="../../assets/css/style.css">
     <title>Admin Login</title>
 </head>
 <body class="bg-light">
@@ -26,19 +27,20 @@ if (isset($_SESSION['error'])) {
                     if(isset($_SESSION['error']))
                     {
                     ?>
-                        <div class="alert alert-danger">
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
                             <?= $_SESSION['error']; ?>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
                     <?php
                         unset($_SESSION['error']);
                     }
                     ?>
                     <form action="/Admission_Portal/Controllers/AuthController.php" method="POST">
-                        <div class="mb-3">
+                        <div class="mb-3 form-group required">
                             <label class="form-label">Username</label>
                             <input type="text" name="username" class="form-control" required>
                         </div>
-                        <div class="mb-3">
+                        <div class="mb-3 form-group required">
                             <label class="form-label">Password</label>
                             <input type="password" name="password" class="form-control" required>
                         </div>

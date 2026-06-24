@@ -11,5 +11,17 @@
 <script src="/Admission_Portal/assets/js/student-search.js"></script>
 <script src="/Admission_Portal/assets/js/get_departments.js"></script>
 <script src="/Admission_Portal/assets/js/courses-list.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.modal').forEach(function(modalEl) {
+            modalEl.addEventListener('hide.bs.modal', function () {
+                var active = document.activeElement;
+                if (active && modalEl.contains(active)) {
+                    active.blur();
+                }
+            });
+        });
+    });
+</script>
 </body>
 </html>
