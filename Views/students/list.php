@@ -262,19 +262,5 @@ $Courses = $conn->query(
     </div>
 </div>
 
-<script>
-    // Handle delete button click
-    document.addEventListener('DOMContentLoaded', function() {
-        const deleteButtons = document.querySelectorAll('.deleteBtn');
-        deleteButtons.forEach(btn => {
-            btn.addEventListener('click', function() {
-                const studentId = this.getAttribute('data-student-id');
-                const studentName = this.getAttribute('data-student-name');
-                document.getElementById('deleteStudentId').value = studentId;
-                document.getElementById('deleteStudentName').textContent = studentName;
-            });
-        });
-    });
-</script>
-
 <?php include __DIR__ . '/../layouts/footer.php'; ?>
+<script src="/Admission_Portal/assets/js/app.js"></script>
