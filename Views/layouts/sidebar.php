@@ -1,3 +1,4 @@
+<div class="col-md-3 col-lg-2 p-2 d-md-block bg-dark position-fixed start-0 overflow-auto sidebar collapse" id="sidebar">
 <nav class="navbar navbar-dark bg-dark flex-column align-items-start p-3 ">
 
     <h4 class="text-white mb-4">Menu</h4>
@@ -45,3 +46,4 @@
     </ul>
 
 </nav>
+</div>

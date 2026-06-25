@@ -95,8 +95,13 @@ class StudentController
 
         if ($this->student->update($id, $_POST))
         {
+            $_SESSION['success'] = "Student Details Edited successfully";
             header("Location: ../Views/students/list.php");
             exit();
+        }
+        else
+        {
+            $_SESSION['error'] = "Failed to edit student details";
         }
     }
 

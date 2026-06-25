@@ -1,4 +1,4 @@
-<nav class="navbar navbar-dark bg-primary header sticky-top">
+<nav class="navbar navbar-dark bg-primary sticky-top header ">
     <div class="container-fluid">
         <!--Toggle button for mobile-->
         <button class="navbar-toggler" type="button" 
@@ -7,13 +7,11 @@
             <span class="navbar-toggler-icon"></span>
         </button>
 
-        <a class="navbar-brand ms-2" href="#">
+        <a class="navbar-brand justify-content-center ms-2" href="#">
              Admission Portal
         </a>
-
         <div class="text-white">
             Welcome Admin
         </div>
-
     </div>
 </nav>

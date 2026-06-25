@@ -1,8 +1,9 @@
-<div class="container">
-    <div class="row">
-    <div class="bg-primary text-white text-center fixed-bottom py-3">
-        © <?php echo date('Y'); ?> Admission Portal
-    </div></div>
+<div class="container"> 
+    <div class="row"> 
+        <div class="bg-primary text-white text-center fixed-bottom py-3"> 
+            © <?php echo date('Y'); ?> Admission Portal 
+        </div> 
+    </div> 
 </div>
 <!--fixed-bottom bg-dark text-white text-center py-3-->
 
