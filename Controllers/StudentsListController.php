@@ -2,7 +2,7 @@
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
-
+die();
 require_once __DIR__ . "/../Config/Database.php";
 require_once __DIR__ . "/../Models/student.php";
 

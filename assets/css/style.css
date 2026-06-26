@@ -10,50 +10,23 @@
 .sidebar {
     top: 60px;      /* below header */
     bottom: 56px;   /* above footer */
-    /*z-index: 1050;*/
 }
 .sidebar.show {
     display: block;
 }
 .content {
-    /*margin-top: 60px;     header height */
     margin-bottom: 50px; /* footer height */
 }
 .header {
     height: 60px;
 }
 @media (max-width: 767.98px) {
-   /* .container-fluid > .row {
-        display: flex;
-        flex-direction: column;
-    }*/
     .sidebar {
-        position: static;
-        width: 100%;
-        bottom: auto;
-        top: auto;
-        margin-top: 0;
         z-index: 1000;
-        order: -1;
+        bottom: auto;
     }
     .sidebar.show {
         display: block;
     }
-    .sidebar.collapse:not(.show) {
-        display: none;
-    }
-    .content {
-        margin-left: 0;
-        width: 100%;
-        order: 0;
-    }
 }
 
-
-/* Ensure Bootstrap modals overlay the fixed header and sidebar */
-.modal {
-    z-index: 2100 !important;
-}
-.modal-backdrop {
-    z-index: 2090 !important;
-}

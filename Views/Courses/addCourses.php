@@ -9,9 +9,7 @@ $conn = $db->connect();
 ?>
 <div class="container-fluid">
     <div class="row">
-        <!--<div class="col-md-3 col-lg-2 p-2 d-md-block bg-dark overflow-auto sidebar collapse" id="sidebar">-->
-            <?php include '../layouts/sidebar.php'; ?>
-        <!--</div>-->
+        <?php include '../layouts/sidebar.php'; ?>
 
         <div class="col-md-9 offset-md-3 col-lg-10 offset-lg-2 p-4 content">
             <div class="card shadow">
@@ -75,33 +73,3 @@ $conn = $db->connect();
 </div>
 
 <?php include '../layouts/footer.php'; ?>
-
-<script>
-document.addEventListener('click', function(e){
-    if (e.target && e.target.id === 'add-dept'){
-        const list = document.getElementById('departments-list');
-        const wrapper = document.createElement('div');
-        wrapper.className = 'input-group mb-2';
-        wrapper.innerHTML = '<input type="text" name="departments[]" class="form-control" placeholder="Department name" required> <button class="btn btn-outline-secondary remove-dept" type="button">Remove</button>';
-        list.appendChild(wrapper);
-    }
-
-    if (e.target && e.target.classList.contains('remove-dept')){
-        const list = document.getElementById('departments-list');
-        const groups = list.querySelectorAll('.input-group');
-        if (groups.length > 1) {
-            const group = e.target.closest('.input-group');
-            if (group) group.remove();
-        } else {
-            // prevent removing last department
-            alert('At least one department is required.');
-        }
-    }
-});
-
-// ensure initial state: if only one input, keep remove button present but prevent removal
-document.addEventListener('DOMContentLoaded', function(){
-    const list = document.getElementById('departments-list');
-    // nothing extra needed; removal is blocked above when only one remains
-});
-</script>

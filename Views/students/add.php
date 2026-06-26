@@ -3,6 +3,7 @@
 <?php
 require_once __DIR__ . '/../../Config/Database.php';
 require_once __DIR__ . '/../../Models/student.php';
+require_once __DIR__ . '/../../Models/Course.php';
 $db = new Database();
 $conn = $db->connect();
 $Courses = $conn->query(
@@ -12,9 +13,7 @@ $Courses = $conn->query(
 ?>
 <div class="container-fluid">
     <div class="row">
-        <!--<div class="col-md-3 col-lg-2 p-2 d-md-block bg-dark overflow-auto sidebar collapse" id="sidebar">-->
-            <?php include '../layouts/sidebar.php'; ?>
-        <!--</div>-->
+        <?php include '../layouts/sidebar.php'; ?>
 
         <!-- Add Student Form -->
         <div class="col-md-9 offset-md-3 col-lg-10 offset-lg-2 p-4 content">

@@ -16,9 +16,7 @@ $courses = $courseModel->getAll();
 
 <div class="container-fluid">
     <div class="row">
-        <!--<div class="col-md-3 col-lg-2 p-2 d-md-block bg-dark overflow-auto sidebar collapse" id="sidebar">-->
-            <?php include __DIR__ . '/../layouts/sidebar.php'; ?>
-        <!--</div>-->
+        <?php include __DIR__ . '/../layouts/sidebar.php'; ?>
 
         <div class="col-md-9 offset-md-3 col-lg-10 offset-lg-2 p-4 content">
             <div class="card shadow">
