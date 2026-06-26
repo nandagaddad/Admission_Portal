@@ -1,6 +1,5 @@
 <?php require_once __DIR__ . '/../../Config/AuthCheck.php'; ?>
 <?php include '../layouts/header.php'; ?>
-<?php include '../layouts/navbar.php'; ?>
 <?php
 
 if (!isset($students))

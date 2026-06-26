@@ -1,6 +1,5 @@
 <?php require_once __DIR__ . '/../../Config/AuthCheck.php'; ?>
 <?php include '../layouts/header.php'; ?>
-<?php include '../layouts/navbar.php'; ?>
 <div class="container-fluid">
     <div class="row">
         <!--<div class="col-md-3 col-lg-2 p-2 d-md-block bg-dark overflow-auto sidebar collapse" id="sidebar">-->

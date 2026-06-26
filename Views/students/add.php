@@ -1,6 +1,5 @@
 <?php require_once __DIR__ . '/../../Config/AuthCheck.php'; ?>
 <?php include '../layouts/header.php'; ?>
-<?php include '../layouts/navbar.php'; ?>
 <?php
 require_once __DIR__ . '/../../Config/Database.php';
 require_once __DIR__ . '/../../Models/student.php';

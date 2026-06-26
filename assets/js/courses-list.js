@@ -1,5 +1,5 @@
 document.addEventListener('click', function(e){
-    // Edit button
+    // Edit Course button
     if (e.target && e.target.classList.contains('editBtn')){
         const id = e.target.getAttribute('data-id');
         fetch('../../controllers/CoursesController.php?action=getCourse&id='+encodeURIComponent(id))
@@ -27,7 +27,7 @@ document.addEventListener('click', function(e){
                 myModal.show();
             });
     }
-
+    // Delete Course Button
     if (e.target && e.target.classList.contains('deleteBtn')){
         const id = e.target.getAttribute('data-id');
         // fetch name for display
@@ -40,7 +40,7 @@ document.addEventListener('click', function(e){
                 myModal.show();
             });
     }
-
+    
     if (e.target && e.target.id === 'edit-add-dept'){
         const list = document.getElementById('edit-departments-list');
         const wrapper = document.createElement('div');

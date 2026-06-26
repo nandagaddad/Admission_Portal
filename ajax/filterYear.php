@@ -1,5 +1,4 @@
 <?php
-
 require_once "../Controllers/StudentSearchYearController.php";   
 
 if(isset($_GET['year']))
