@@ -49,7 +49,7 @@ $Courses = $conn->query(
                                 <select class="form-select" id="course" name="course" onchange="getDepartments(this.value); getYear(this.value);" required>
                                     <option value="">Select Course</option>
                                     <?php while ($row = $Courses->fetch(PDO::FETCH_ASSOC)) : ?>
-                                    <option value="<?php echo $row['id']; ?>"><?php echo $row['course_name']; ?></option>
+                                    <option value="<?php echo $row['id']; ?>"><?php echo htmlspecialchars($row['course_name']); ?></option>
                                     <?php endwhile; ?>
                                 </select>
                             </div>

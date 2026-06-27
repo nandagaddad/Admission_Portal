@@ -1,6 +1,5 @@
-<?php require_once __DIR__ . '/../Config/AuthCheck.php'; ?>
-<?php
 
+<?php
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
@@ -23,7 +22,7 @@ class AuthController
     public function login()
     {
         if($_SERVER["REQUEST_METHOD"] == "POST")
-        {
+        {   
             $username = trim($_POST['username']);
             $password = trim($_POST['password']);
             $admin = $this->adminModel->login($username, $password);

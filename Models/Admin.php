@@ -9,7 +9,7 @@ class Admin
     {
         $this->conn = $db;
     }
-
+/*
     public function login($username, $password)
     {
         $sql = "SELECT * FROM ".$this->table." WHERE username = :username";
@@ -27,6 +27,26 @@ class Admin
             // Plain-text password comparison
             if($password == $admin['password'])
             {
+                return $admin;
+            }
+        }
+
+        return false;
+    }
+   */
+    public function login($username, $password)
+    {
+        $sql = "SELECT * FROM ".$this->table." WHERE username = :username";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindParam(':username', $username);
+        $stmt->execute();
+
+        if ($stmt->rowCount() > 0) {
+
+            $admin = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if (password_verify($password, $admin['password'])) {
                 return $admin;
             }
         }

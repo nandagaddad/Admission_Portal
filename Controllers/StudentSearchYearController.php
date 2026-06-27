@@ -2,7 +2,7 @@
 <?php
 
 require_once __DIR__ . "/../Config/Database.php";
-require_once __DIR__ . "/../Models/Student.php";
+require_once __DIR__ . "/../Models/student.php";
 
 class StudentSearchYearController
 {

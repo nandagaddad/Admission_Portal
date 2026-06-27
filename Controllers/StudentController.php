@@ -33,9 +33,7 @@ class StudentController
                 'email' => trim($_POST['email']),
                 'phone' => trim($_POST['phone']),
                 'address' => trim($_POST['address']),
-                /*'course' => trim($_POST['course']),*/
                 'admission_year' => $_POST['admission_year'],
-                /*'status' => $_POST['status'],*/
                 'course_id' => $_POST['course'],
                 'department_id' => $_POST['department'],
                 'academic_year' => $_POST['year'],
@@ -81,15 +79,7 @@ class StudentController
         header('Content-Type: application/json');
         echo json_encode($years);
     }
-    public function edit()
-    {
-        $id = $_GET['id'];
-
-        $student = $this->student->getById($id);
-
-        require "../Views/students/edit.php";
-    }
-
+    
     public function update()
     {
         $id = $_POST['id'];
@@ -105,7 +95,7 @@ class StudentController
             $_SESSION['error'] = "Failed to edit student details";
         }
     }
-
+    
     public function delete()
     {
         if ($_SERVER['REQUEST_METHOD'] == "POST")
@@ -146,10 +136,6 @@ switch ($action)
         $controller->getYear();
         break;
         
-    case 'edit':
-        $controller->edit();
-        break;
-
     case 'update':
         $controller->update();
         break;
