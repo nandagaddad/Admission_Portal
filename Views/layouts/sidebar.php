@@ -12,6 +12,18 @@
         </li>
 
         <li class="nav-item">
+            <a class="nav-link text-white" href="../Staff/addStaff.php">
+                Add Staff
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link text-white" href="../Staff/listStaff.php">
+                Staff List
+            </a>
+        </li>
+
+        <li class="nav-item">
             <a class="nav-link text-white" href="../students/add.php">
                 Add Student
             </a>

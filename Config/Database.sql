@@ -4,7 +4,7 @@ CREATE TABLE admin(
 	password VARCHAR(255)
 );
 
-INSERT INTO  admin(username, password) VALUES (admin, admin123);
+INSERT INTO  admin(username, password) VALUES ('admin', 'admin123');
 
 CREATE TABLE students(
 	id INT PRIMARY KEY AUTO_INCREMENT,
@@ -19,10 +19,10 @@ CREATE TABLE students(
 	phone VARCHAR(20),
 	address TEXT,
 	admission_year YEAR,
-	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
-	course_id INT;
-	department_id INT;
-	academic_year INT;
+	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	course_id INT,
+	department_id INT,
+	academic_year INT,
 	semester INT
 );
 
@@ -45,14 +45,35 @@ ALTER TABLE students ADD CONSTRAINT fk_student_course
         FOREIGN KEY (course_id)
         REFERENCES courses(id)
         ON DELETE RESTRICT
-        ON UPDATE CASCADE,
+        ON UPDATE CASCADE;
 
 ALTER TABLE students ADD CONSTRAINT fk_student_department
         FOREIGN KEY (department_id)
         REFERENCES departments(id)
         ON DELETE RESTRICT
-        ON UPDATE CASCADE
+        ON UPDATE CASCADE;
 
 UPDATE admin SET password = 'admin123' where id = 1;
 
 UPDATE admin SET password = '$2y$10$9.bXFH5u60X6bfEXtBHhI.6Cpw9pybHL/CE4JrxEytC70ZRP43h3.' where id = 1;
+
+
+CREATE TABLE staff (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    staff_id VARCHAR(20) UNIQUE NOT NULL,
+    first_name VARCHAR(50) NOT NULL,
+    last_name VARCHAR(50),
+    gender ENUM('Male', 'Female', 'Other') NOT NULL,
+    email VARCHAR(100) UNIQUE,
+    phone VARCHAR(15),
+    designation VARCHAR(100) NOT NULL,
+    course_id INT,
+    department_id INT,
+    qualification VARCHAR(100),
+    joining_date DATE,
+    status INT DEFAULT 1,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (course_id) REFERENCES courses(id),
+    FOREIGN KEY (department_id) REFERENCES departments(id)
+);

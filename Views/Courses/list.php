@@ -116,7 +116,7 @@ $courses = $courseModel->getAll();
                     </div>
                     <div class="modal-footer mt-3">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                        <button type="submit" name="submit" value="update" class="btn btn-primary">Save Changes</button>
                     </div>
                 </form>
             </div>
