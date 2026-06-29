@@ -16,6 +16,7 @@ class Staff
                 FROM staff AS st
                 LEFT JOIN courses AS c ON c.id = st.course_id
                 LEFT JOIN departments AS d ON d.id = st.department_id
+                WHERE st.status = 1
                 ORDER BY st.id DESC";
 
         $stmt = $this->conn->prepare($sql);
@@ -84,4 +85,43 @@ class Staff
         ]);
     }
 
+    public function update($id, $data)
+    {
+        $sql = "UPDATE staff SET
+                staff_id = ?,
+                first_name = ?,
+                last_name = ?,
+                gender = ?,
+                email = ?,
+                phone = ?,
+                designation = ?,
+                course_id = ?,
+                department_id = ?,
+                qualification = ?,
+                joining_date = ?
+                WHERE id = ?";
+
+        $stmt = $this->conn->prepare($sql);
+
+        return $stmt->execute([
+            $data['staff_id'],
+            $data['first_name'],
+            $data['last_name'],
+            $data['gender'],
+            $data['email'],
+            $data['phone'],
+            $data['designation'],
+            $data['course_id'],
+            $data['department_id'],
+            $data['qualification'],
+            $data['joining_date'],
+            $id,
+        ]);
+    }
+    public function delete($id)
+    {
+        $sql = "UPDATE staff SET status = 0 WHERE id = ?";
+        $stmt = $this->conn->prepare($sql);
+        return $stmt->execute([$id]);
+    }
 }

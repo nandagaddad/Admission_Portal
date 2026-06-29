@@ -78,9 +78,36 @@ function getSemester(year) {
     }
     semesterDropdown.innerHTML = options;
 }
-
+/*
 function loadDepartments(courseId, selectedDepartmentId) {
     var departmentDropdown = document.getElementById('department');
+    if (!courseId) {
+        departmentDropdown.innerHTML = '<option value="">Select Department</option>';
+        return;
+    }
+    departmentDropdown.innerHTML = '<option value="">Loading...</option>';
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', '/Admission_Portal/Controllers/StudentController.php?action=getDepartments&course_id=' + encodeURIComponent(courseId), true);
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            var departments = JSON.parse(xhr.responseText);
+            var options = '<option value="">Select Department</option>';
+            for (var i = 0; i < departments.length; i++) {
+                options += '<option value="' + departments[i].id + '">' + departments[i].department_name + '</option>';
+            }
+            departmentDropdown.innerHTML = options;
+            if (selectedDepartmentId) {
+                departmentDropdown.value = selectedDepartmentId;
+            }
+        }
+    };
+    xhr.send();
+}
+*/
+
+function loadDepartments(courseId, selectedDepartmentId) {
+    var departmentDropdown = document.getElementById('department_id');
     if (!courseId) {
         departmentDropdown.innerHTML = '<option value="">Select Department</option>';
         return;

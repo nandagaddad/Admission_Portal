@@ -26,6 +26,20 @@ $Courses = $conn->query(
 
             <div class="card shadow">
 
+                <?php if (isset($_SESSION['success'])) : ?>
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <?= htmlspecialchars($_SESSION['success']); ?>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    <?php unset($_SESSION['success']); ?>
+                <?php elseif (isset($_SESSION['error'])) : ?>
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <?= htmlspecialchars($_SESSION['error']); ?>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    <?php unset($_SESSION['error']); ?>
+                <?php endif; ?>
+
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h4>Staff List</h4>
                     <a href="../Staff/addStaff.php" class="btn btn-primary"> Add Staff </a>
@@ -51,6 +65,7 @@ $Courses = $conn->query(
                                 <th>Joining Date</th>
                                 <th>Status</th>
                                 <th>Created At</th>
+                                <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -77,6 +92,33 @@ $Courses = $conn->query(
                                             <?php }?>
                                     </td>
                                     <td><?= $staff['created_at']; ?></td>
+                                    <td class="text-center">
+                                        <button class="btn btn-warning btn-sm editStaffBtn"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#editStaffModal"
+                                            data-staff-id="<?= $staff['id']; ?>"
+                                            data-staff-staff_id="<?= htmlspecialchars($staff['staff_id']); ?>"
+                                            data-staff-first_name="<?= htmlspecialchars($staff['first_name']); ?>"
+                                            data-staff-last_name="<?= htmlspecialchars($staff['last_name']); ?>"
+                                            data-staff-gender="<?= htmlspecialchars($staff['gender']); ?>"
+                                            data-staff-email="<?= htmlspecialchars($staff['email']); ?>"
+                                            data-staff-phone="<?= htmlspecialchars($staff['phone']); ?>"
+                                            data-staff-designation="<?= htmlspecialchars($staff['designation']); ?>"
+                                            data-staff-course_id="<?= $staff['course_id']; ?>"
+                                            data-staff-department_id="<?= $staff['department_id']; ?>"
+                                            data-staff-qualification="<?= htmlspecialchars($staff['qualification']); ?>"
+                                            data-staff-joining_date="<?= htmlspecialchars($staff['joining_date']); ?>">
+                                            Edit
+                                        </button>
+                                        <button
+                                           class="btn btn-danger btn-sm deleteStaffBtn"
+                                           data-bs-toggle="modal"
+                                           data-bs-target="#deleteStaffModal"
+                                           data-staff-id="<?= $staff['id']; ?>"
+                                           data-staff-name="<?= htmlspecialchars($staff['first_name'].' '.$staff['last_name']); ?>">
+                                            Delete
+                                        </button>
+                                    </td>
                                 </tr>
                                 <?php endforeach; ?>
                                 <?php else: ?>
@@ -101,5 +143,162 @@ $Courses = $conn->query(
 
     </div>
 </div>
+
+<!-- The Edit Staff Modal -->
+<div class="modal" id="editStaffModal" tabindex="-1">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Edit Staff Details</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form action="../../controllers/StaffController.php?action=update" method="POST">
+                    <input type="hidden" name="id" id="staffId">
+                    <div class="row g-3">
+                        <div class="col-md-4 form-group required">
+                            <label class="form-label">Staff ID</label>
+                            <input type="text" name="staff_id" id="staff_id" class="form-control" required>
+                        </div>
+                        <div class="col-md-4 form-group required">
+                            <label class="form-label">First Name</label>
+                            <input type="text" name="first_name" id="first_name" class="form-control" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Last Name</label>
+                            <input type="text" name="last_name" id="last_name" class="form-control" >
+                        </div>
+                        <div class="col-md-4 form-group required">
+                            <label class="form-label">Gender</label>
+                            <select name="gender" id="gender" class="form-select" required>
+                                <option value="">Select Gender</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4 form-group required">
+                            <label class="form-label">Email</label>
+                            <input type="email" name="email" id="email" class="form-control" required>
+                        </div>
+                        <div class="col-md-4 form-group required">
+                            <label class="form-label">Mobile Number</label>
+                            <input type="text" name="phone" id="phone" class="form-control" maxlength="10" required>
+                        </div>
+                        <div class="col-md-4 form-group required">
+                            <label class="form-label">Designation</label>
+                            <input type="text" name="designation" id="designation" class="form-control" min="2000" max="<?= date('Y'); ?>" required>
+                        </div>
+                        <div class="col-md-4 form-group required">
+                            <label class="form-label">Course</label>
+                            <select class="form-select" id="course_id" name="course_id" onchange="loadDepartments(this.value, ''); loadYears(this.value, '', '');" required>
+                                <option value="">Select Course</option>
+                                <?php while ($row = $Courses->fetch(PDO::FETCH_ASSOC)) : ?>
+                                    <option value="<?php echo $row['id']; ?>"><?php echo htmlspecialchars($row['course_name']); ?></option>
+                                <?php endwhile; ?>
+                            </select>
+                        </div>
+                        <div class="col-md-4 form-group required">
+                            <label class="form-label">Department</label>
+                            <select class="form-select" id="department_id" name="department_id" required>
+                                <option value="">Select Department</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4 form-group required">
+                            <label class="form-label">Qualification</label>
+                            <input type="text" name="qualification" id="qualification" class="form-control" required>
+                        </div>
+                        <div class="col-md-4 form-group required">
+                            <label class="form-label">joining_date</label>
+                            <input type="date" name="joining_date" id="joining_date" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer mt-3">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Student Modal -->
+<div class="modal" id="deleteStaffModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h4 class="modal-title">Delete Staff</h4>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete this staff?</p>
+                <p><strong>Staff Name:</strong> <span id="deleteStaffName"></span></p>
+                <p class="text-danger"><strong>Warning:</strong> This action cannot be undone.</p>
+            </div>
+            <div class="modal-footer">
+                <form action="../../controllers/StaffController.php?action=delete" method="POST" >
+                    <input type="hidden" name="id" id="deleteStaffId">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-danger">Delete Staff</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    
+function setEditModalValuesForStaff(button) {
+        var staffId = button.dataset.staffId || '';
+        var staff_id = button.dataset.staffStaff_id || '';
+        var first_name = button.dataset.staffFirst_name || '';
+        var last_name = button.dataset.staffLast_name || '';
+        var gender = button.dataset.staffGender || '';
+        var email = button.dataset.staffEmail || '';
+        var phone = button.dataset.staffPhone || '';
+        var designation = button.dataset.staffDesignation || '';
+        var course_id = button.dataset.staffCourse_id || '';
+        var department_id = button.dataset.staffDepartment_id || '';
+        var qualification = button.dataset.staffQualification || '';
+        var joining_date = button.dataset.staffJoining_date || '';
+
+        document.getElementById('staffId').value = staffId;
+        document.getElementById('staff_id').value = staff_id;
+        document.getElementById('first_name').value = first_name;
+        document.getElementById('last_name').value = last_name;
+        document.getElementById('gender').value = gender;
+        document.getElementById('email').value = email;
+        document.getElementById('phone').value = phone;
+        document.getElementById('designation').value = designation;
+        document.getElementById('course_id').value = course_id;
+
+        loadDepartments(course_id, department_id);
+
+        document.getElementById('qualification').value = qualification;
+        document.getElementById('joining_date').value = joining_date
+    }
+
+document.addEventListener('DOMContentLoaded', function() {
+    var editButtons = document.querySelectorAll('.editStaffBtn');
+    editButtons.forEach(function(button) {
+        button.addEventListener('click', function() {
+            setEditModalValuesForStaff(button);
+        });
+    });
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    const deleteButtons = document.querySelectorAll('.deleteStaffBtn');
+    deleteButtons.forEach(btn => {
+        btn.addEventListener('click', function() {
+            const staffId = this.getAttribute('data-staff-id');
+            const staffName = this.getAttribute('data-staff-name');
+            document.getElementById('deleteStaffId').value = staffId;
+            document.getElementById('deleteStaffName').textContent = staffName;
+        });
+    });
+});
+</script>
 
 <?php include '../layouts/footer.php'; ?>
