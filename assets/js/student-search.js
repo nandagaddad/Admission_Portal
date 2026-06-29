@@ -17,7 +17,7 @@ function searchStudent()
 
     xhr.open(
         "GET",
-        "/Admission_Portal/ajax/filterYear.php?year=" + encodeURIComponent(year),
+        "/Admission_Portal/Controllers/StudentSearchYearController.php?year=" + encodeURIComponent(year),
         true
     );
 

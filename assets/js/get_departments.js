@@ -78,33 +78,6 @@ function getSemester(year) {
     }
     semesterDropdown.innerHTML = options;
 }
-/*
-function loadDepartments(courseId, selectedDepartmentId) {
-    var departmentDropdown = document.getElementById('department');
-    if (!courseId) {
-        departmentDropdown.innerHTML = '<option value="">Select Department</option>';
-        return;
-    }
-    departmentDropdown.innerHTML = '<option value="">Loading...</option>';
-
-    var xhr = new XMLHttpRequest();
-    xhr.open('GET', '/Admission_Portal/Controllers/StudentController.php?action=getDepartments&course_id=' + encodeURIComponent(courseId), true);
-    xhr.onreadystatechange = function() {
-        if (xhr.readyState === 4 && xhr.status === 200) {
-            var departments = JSON.parse(xhr.responseText);
-            var options = '<option value="">Select Department</option>';
-            for (var i = 0; i < departments.length; i++) {
-                options += '<option value="' + departments[i].id + '">' + departments[i].department_name + '</option>';
-            }
-            departmentDropdown.innerHTML = options;
-            if (selectedDepartmentId) {
-                departmentDropdown.value = selectedDepartmentId;
-            }
-        }
-    };
-    xhr.send();
-}
-*/
 
 function loadDepartments(courseId, selectedDepartmentId) {
     var departmentDropdown = document.getElementById('department_id');
@@ -191,48 +164,3 @@ function setSemesterOptions(year, selectedSemester) {
         semesterDropdown.value = selectedSemester;
     }
 }
-
-function setEditModalValues(button) {
-        var studentId = button.dataset.studentId || '';
-        var applicationNo = button.dataset.studentApplicationNo || '';
-        var firstName = button.dataset.studentFirstName || '';
-        var lastName = button.dataset.studentLastName || '';
-        var fatherName = button.dataset.studentFatherName || '';
-        var motherName = button.dataset.studentMotherName || '';
-        var gender = button.dataset.studentGender || '';
-        var dob = button.dataset.studentDob || '';
-        var email = button.dataset.studentEmail || '';
-        var phone = button.dataset.studentPhone || '';
-        var address = button.dataset.studentAddress || '';
-        var admissionYear = button.dataset.studentAdmissionYear || '';
-        var courseId = button.dataset.studentCourseId || '';
-        var departmentId = button.dataset.studentDepartmentId || '';
-        var academicYear = button.dataset.studentAcademicYear || '';
-        var semester = button.dataset.studentSemester || '';
-
-        document.getElementById('studentId').value = studentId;
-        document.getElementById('applicationNo').value = applicationNo;
-        document.getElementById('firstName').value = firstName;
-        document.getElementById('lastName').value = lastName;
-        document.getElementById('fatherName').value = fatherName;
-        document.getElementById('motherName').value = motherName;
-        document.getElementById('gender').value = gender;
-        document.getElementById('dob').value = dob;
-        document.getElementById('email').value = email;
-        document.getElementById('phone').value = phone;
-        document.getElementById('address').value = address;
-        document.getElementById('admissionYear').value = admissionYear;
-        document.getElementById('course').value = courseId;
-
-        loadDepartments(courseId, departmentId);
-        loadYears(courseId, academicYear, semester);
-    }
-
-    document.addEventListener('DOMContentLoaded', function() {
-        var editButtons = document.querySelectorAll('.editStudentBtn');
-        editButtons.forEach(function(button) {
-            button.addEventListener('click', function() {
-                setEditModalValues(button);
-            });
-        });
-    });

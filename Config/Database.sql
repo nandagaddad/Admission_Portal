@@ -23,14 +23,16 @@ CREATE TABLE students(
 	course_id INT,
 	department_id INT,
 	academic_year INT,
-	semester INT
+	semester INT,
+	status INT DEFAULT 1,
 );
 
 CREATE TABLE IF NOT EXISTS courses (
 	id INT PRIMARY KEY AUTO_INCREMENT,
 	course_name VARCHAR(255) NOT NULL,
 	duration_years INT DEFAULT 1,
-	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	status INT DEFAULT 1
 );
 
 CREATE TABLE IF NOT EXISTS departments (
@@ -38,7 +40,8 @@ CREATE TABLE IF NOT EXISTS departments (
 	course_id INT NOT NULL,
 	department_name VARCHAR(255) NOT NULL,
 	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-	FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE CASCADE
+	FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE CASCADE,
+	status INT DEFAULT 1,
 );
 
 ALTER TABLE students ADD CONSTRAINT fk_student_course

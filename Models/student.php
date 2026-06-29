@@ -75,6 +75,7 @@ class Student
                 FROM students AS s
                 LEFT JOIN courses AS c ON c.id = s.course_id
                 LEFT JOIN departments AS d ON d.id = s.department_id
+                WHERE s.status = 1
                 ORDER BY s.id DESC";
 
         $stmt = $this->conn->prepare($sql);
@@ -158,9 +159,9 @@ class Student
             $data['email'],
             $data['phone'],
             $data['address'],
-            $data['course'],
-            $data['department'],
-            $data['year'],
+            $data['course_id'],
+            $data['department_id'],
+            $data['academic_year'],
             $data['semester'],
             $data['admission_year'],
             $id,
@@ -169,7 +170,7 @@ class Student
 
     public function delete($id)
     {
-        $sql = "DELETE FROM students WHERE id = ?";
+        $sql = "UPDATE students SET status = 0 WHERE id = ?";
         $stmt = $this->conn->prepare($sql);
         return $stmt->execute([$id]);
     }

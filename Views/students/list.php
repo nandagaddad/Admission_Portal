@@ -195,7 +195,7 @@ $Courses = $conn->query(
                         </div>
                         <div class="col-md-4 form-group required">
                             <label class="form-label">Course</label>
-                            <select class="form-select" id="course" name="course" onchange="loadDepartments(this.value, ''); loadYears(this.value, '', '');" required>
+                            <select class="form-select" id="course" name="course_id" onchange="loadDepartments(this.value, ''); loadYears(this.value, '', '');" required>
                                 <option value="">Select Course</option>
                                 <?php while ($row = $Courses->fetch(PDO::FETCH_ASSOC)) : ?>
                                     <option value="<?php echo $row['id']; ?>"><?php echo htmlspecialchars($row['course_name']); ?></option>
@@ -204,13 +204,13 @@ $Courses = $conn->query(
                         </div>
                         <div class="col-md-4 form-group required">
                             <label class="form-label">Department</label>
-                            <select class="form-select" id="department" name="department" required>
+                            <select class="form-select" id="department_id" name="department_id" required>
                                 <option value="">Select Department</option>
                             </select>
                         </div>
                         <div class="col-md-4 form-group required">
                             <label class="form-label">Academic Year</label>
-                            <select class="form-select" id="year" name="year" onchange="setSemesterOptions(this.value, '');" required>
+                            <select class="form-select" id="year" name="academic_year" onchange="setSemesterOptions(this.value, '');" required>
                                 <option value="">Select Year</option>
                             </select>
                         </div>
@@ -260,18 +260,64 @@ $Courses = $conn->query(
 </div>
 
 <script>
-    // Handle delete button click
-    document.addEventListener('DOMContentLoaded', function() {
-        const deleteButtons = document.querySelectorAll('.deleteBtn');
-        deleteButtons.forEach(btn => {
-            btn.addEventListener('click', function() {
-                const studentId = this.getAttribute('data-student-id');
-                const studentName = this.getAttribute('data-student-name');
-                document.getElementById('deleteStudentId').value = studentId;
-                document.getElementById('deleteStudentName').textContent = studentName;
-            });
+    
+function setEditModalValues(button) {
+    var studentId = button.dataset.studentId || '';
+    var applicationNo = button.dataset.studentApplicationNo || '';
+    var firstName = button.dataset.studentFirstName || '';
+    var lastName = button.dataset.studentLastName || '';
+    var fatherName = button.dataset.studentFatherName || '';
+    var motherName = button.dataset.studentMotherName || '';
+    var gender = button.dataset.studentGender || '';
+    var dob = button.dataset.studentDob || '';
+    var email = button.dataset.studentEmail || '';
+    var phone = button.dataset.studentPhone || '';
+    var address = button.dataset.studentAddress || '';
+    var admissionYear = button.dataset.studentAdmissionYear || '';
+    var courseId = button.dataset.studentCourseId || '';
+    var departmentId = button.dataset.studentDepartmentId || '';
+    var academicYear = button.dataset.studentAcademicYear || '';
+    var semester = button.dataset.studentSemester || '';
+
+    document.getElementById('studentId').value = studentId;
+    document.getElementById('applicationNo').value = applicationNo;
+    document.getElementById('firstName').value = firstName;
+    document.getElementById('lastName').value = lastName;
+    document.getElementById('fatherName').value = fatherName;
+    document.getElementById('motherName').value = motherName;
+    document.getElementById('gender').value = gender;
+    document.getElementById('dob').value = dob;
+    document.getElementById('email').value = email;
+    document.getElementById('phone').value = phone;
+    document.getElementById('address').value = address;
+    document.getElementById('admissionYear').value = admissionYear;
+    document.getElementById('course').value = courseId;
+
+    loadDepartments(courseId, departmentId);
+    loadYears(courseId, academicYear, semester);
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Handle edit button click
+    var editButtons = document.querySelectorAll('.editStudentBtn');
+    editButtons.forEach(function(button) {
+        button.addEventListener('click', function() {
+            setEditModalValues(button);
         });
     });
+
+    // Handle delete button click
+    const deleteButtons = document.querySelectorAll('.deleteBtn');
+    deleteButtons.forEach(btn => {
+        btn.addEventListener('click', function() {
+            const studentId = this.getAttribute('data-student-id');
+            const studentName = this.getAttribute('data-student-name');
+            document.getElementById('deleteStudentId').value = studentId;
+            document.getElementById('deleteStudentName').textContent = studentName;
+        });
+    });
+});
+
 </script>
 
 <?php include __DIR__ . '/../layouts/footer.php'; ?>

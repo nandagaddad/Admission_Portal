@@ -44,7 +44,7 @@ class CoursesController
 
                 if ($ok) {
                     $_SESSION['success'] = 'Course and departments added successfully';
-                    header('Location: ../Views/Courses/addCourses.php');
+                    header('Location: ../Views/Courses/list.php');
                     exit();
                 } else {
                     $_SESSION['error'] = 'Failed to save course';

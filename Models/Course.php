@@ -58,19 +58,19 @@ class Course
 
     public function getAll()
     {
-        $stmt = $this->conn->prepare("SELECT * FROM courses ORDER BY id DESC");
+        $stmt = $this->conn->prepare("SELECT * FROM courses WHERE status = 1 ORDER BY id DESC");
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function getById($id)
     {
-        $stmt = $this->conn->prepare("SELECT * FROM courses WHERE id = :id");
+        $stmt = $this->conn->prepare("SELECT * FROM courses WHERE id = :id AND status = 1");
         $stmt->execute([':id' => $id]);
         $course = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($course) {
-            $dstmt = $this->conn->prepare("SELECT * FROM departments WHERE course_id = :course_id ORDER BY id ASC");
+            $dstmt = $this->conn->prepare("SELECT * FROM departments WHERE course_id = :course_id AND status = 1 ORDER BY id ASC");
             $dstmt->execute([':course_id' => $id]);
             $course['departments'] = $dstmt->fetchAll(PDO::FETCH_ASSOC);
         }
@@ -122,20 +122,26 @@ class Course
 
                 if (!empty($removedIds)) {
                     $placeholders = implode(',', array_fill(0, count($removedIds), '?'));
-                    $countSql = "SELECT COUNT(*) FROM students WHERE course_id = ? AND department_id IN ($placeholders)";
-                    $countStmt = $this->conn->prepare($countSql);
-                    $countStmt->execute(array_merge([$id], $removedIds));
-                    $count = (int) $countStmt->fetchColumn();
 
-                    if ($count > 0) {
+                    $studentCountSql = "SELECT COUNT(*) FROM students WHERE course_id = ? AND department_id IN ($placeholders)";
+                    $studentCountStmt = $this->conn->prepare($studentCountSql);
+                    $studentCountStmt->execute(array_merge([$id], $removedIds));
+                    $studentCount = (int) $studentCountStmt->fetchColumn();
+
+                    $staffCountSql = "SELECT COUNT(*) FROM staff WHERE course_id = ? AND department_id IN ($placeholders)";
+                    $staffCountStmt = $this->conn->prepare($staffCountSql);
+                    $staffCountStmt->execute(array_merge([$id], $removedIds));
+                    $staffCount = (int) $staffCountStmt->fetchColumn();
+
+                    if ($studentCount > 0 || $staffCount > 0) {
                         $this->conn->rollBack();
                         return [
                             'success' => false,
-                            'error' => 'Cannot remove a department while students are still assigned to it. Remove or reassign those students first.'
+                            'error' => 'Cannot remove a department while students or staff are still assigned to it. Remove or reassign them first.'
                         ];
                     }
 
-                    $deleteSql = "DELETE FROM departments WHERE course_id = ? AND id IN ($placeholders)";
+                    $deleteSql = "UPDATE departments SET status = 0 WHERE course_id = ? AND id IN ($placeholders)";
                     $deleteStmt = $this->conn->prepare($deleteSql);
                     $deleteStmt->execute(array_merge([$id], $removedIds));
                 }
@@ -165,10 +171,47 @@ class Course
         try {
             $this->conn->beginTransaction();
 
-            $dstmt = $this->conn->prepare("DELETE FROM departments WHERE course_id = :course_id");
+            $departmentStmt = $this->conn->prepare("SELECT id FROM departments WHERE course_id = :course_id AND status = 1");
+            $departmentStmt->execute([':course_id' => $id]);
+            $departmentRows = $departmentStmt->fetchAll(PDO::FETCH_ASSOC);
+            $departmentIds = array_column($departmentRows, 'id');
+
+            $studentCountSql = "SELECT COUNT(*) FROM students WHERE course_id = :course_id";
+            $studentCountStmt = $this->conn->prepare($studentCountSql);
+            $studentCountStmt->execute([':course_id' => $id]);
+            $studentCount = (int) $studentCountStmt->fetchColumn();
+
+            $staffCountSql = "SELECT COUNT(*) FROM staff WHERE course_id = :course_id";
+            $staffCountStmt = $this->conn->prepare($staffCountSql);
+            $staffCountStmt->execute([':course_id' => $id]);
+            $staffCount = (int) $staffCountStmt->fetchColumn();
+
+            $departmentStudentCount = 0;
+            $departmentStaffCount = 0;
+
+            if (!empty($departmentIds)) {
+                $departmentPlaceholders = implode(',', array_fill(0, count($departmentIds), '?'));
+
+                $departmentStudentSql = "SELECT COUNT(*) FROM students WHERE department_id IN ($departmentPlaceholders)";
+                $departmentStudentStmt = $this->conn->prepare($departmentStudentSql);
+                $departmentStudentStmt->execute($departmentIds);
+                $departmentStudentCount = (int) $departmentStudentStmt->fetchColumn();
+
+                $departmentStaffSql = "SELECT COUNT(*) FROM staff WHERE department_id IN ($departmentPlaceholders)";
+                $departmentStaffStmt = $this->conn->prepare($departmentStaffSql);
+                $departmentStaffStmt->execute($departmentIds);
+                $departmentStaffCount = (int) $departmentStaffStmt->fetchColumn();
+            }
+
+            if ($studentCount > 0 || $staffCount > 0 || $departmentStudentCount > 0 || $departmentStaffCount > 0) {
+                $this->conn->rollBack();
+                return false;
+            }
+
+            $dstmt = $this->conn->prepare("UPDATE departments SET status = 0 WHERE course_id = :course_id");
             $dstmt->execute([':course_id' => $id]);
 
-            $stmt = $this->conn->prepare("DELETE FROM {$this->table} WHERE id = :id");
+            $stmt = $this->conn->prepare("UPDATE {$this->table} SET status = 0 WHERE id = :id");
             $result = $stmt->execute([':id' => $id]);
 
             $this->conn->commit();

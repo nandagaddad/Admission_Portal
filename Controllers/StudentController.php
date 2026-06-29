@@ -43,7 +43,7 @@ class StudentController
             if ($this->student->create($data))
             {
                 $_SESSION['success'] = "Student added successfully";
-                header("Location: /Admission_Portal/Views/dashboard/index.php");
+                header("Location: /Admission_Portal/Views/students/list.php");
                 exit();
             }
             else
@@ -82,17 +82,37 @@ class StudentController
     
     public function update()
     {
-        $id = $_POST['id'];
+        if ($_SERVER['REQUEST_METHOD'] == "POST")
+        {
+            $id = $_POST['id'];
+            $data = [
+                'application_no' => trim($_POST['application_no']),
+                'first_name' => trim($_POST['first_name']),
+                'last_name' => trim($_POST['last_name']),
+                'father_name' => trim($_POST['father_name']),
+                'mother_name' => trim($_POST['mother_name']),
+                'gender' => $_POST['gender'],
+                'dob' => $_POST['dob'],
+                'email' => trim($_POST['email']),
+                'phone' => trim($_POST['phone']),
+                'address' => trim($_POST['address']),
+                'admission_year' => $_POST['admission_year'],
+                'course_id' => $_POST['course_id'],
+                'department_id' => $_POST['department_id'],
+                'academic_year' => $_POST['academic_year'],
+                'semester' => $_POST['semester']
+            ];
 
-        if ($this->student->update($id, $_POST))
-        {
-            $_SESSION['success'] = "Student Details Edited successfully";
-            header("Location: ../Views/students/list.php");
-            exit();
-        }
-        else
-        {
-            $_SESSION['error'] = "Failed to edit student details";
+            if ($this->student->update($id, $data))
+            {
+                $_SESSION['success'] = "Student added successfully";
+                header("Location: /Admission_Portal/Views/students/list.php");
+                exit();
+            }
+            else
+            {
+                $_SESSION['error'] = "Failed to add student";
+            }
         }
     }
     

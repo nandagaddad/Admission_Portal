@@ -280,15 +280,14 @@ function setEditModalValuesForStaff(button) {
     }
 
 document.addEventListener('DOMContentLoaded', function() {
+    // Handle edit button click
     var editButtons = document.querySelectorAll('.editStaffBtn');
     editButtons.forEach(function(button) {
         button.addEventListener('click', function() {
             setEditModalValuesForStaff(button);
         });
     });
-});
-
-document.addEventListener('DOMContentLoaded', function() {
+    // Handle delete button click
     const deleteButtons = document.querySelectorAll('.deleteStaffBtn');
     deleteButtons.forEach(btn => {
         btn.addEventListener('click', function() {
@@ -299,6 +298,8 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
+
+
 </script>
 
 <?php include '../layouts/footer.php'; ?>
