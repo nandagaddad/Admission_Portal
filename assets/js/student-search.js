@@ -1,4 +1,4 @@
-function searchStudent()
+/*function searchStudent()
 {
     let year = document.getElementById('year').value;
 
@@ -96,4 +96,4 @@ function searchStudent()
     };
 
     xhr.send();
-}
+}*/

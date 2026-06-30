@@ -109,7 +109,7 @@ class Student
                 FROM students AS s
                 LEFT JOIN courses AS c ON c.id = s.course_id
                 LEFT JOIN departments AS d ON d.id = s.department_id
-                WHERE s.admission_year = :year
+                WHERE s.admission_year = :year AND s.status = 1
                 ORDER BY s.id DESC";
 
         $stmt = $this->conn->prepare($sql);
@@ -121,7 +121,7 @@ class Student
     // Get single student by ID
     public function getById($id)
     {
-        $stmt = $this->conn->prepare("SELECT * FROM students WHERE id = ?");
+        $stmt = $this->conn->prepare("SELECT * FROM students WHERE id = ? AND status = 1");
         $stmt->execute([$id]);
 
         return $stmt->fetch(PDO::FETCH_ASSOC);
