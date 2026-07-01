@@ -4,8 +4,13 @@
 require_once __DIR__ . '/../../Config/Database.php';
 require_once __DIR__ . '/../../Models/student.php';
 require_once __DIR__ . '/../../Models/Course.php';
+
 $db = new Database();
 $conn = $db->connect();
+/*
+$CoursesModel = new Course($conn);
+$Courses = $CoursesModel->getAll();
+*/
 $Courses = $conn->query(
     "SELECT * FROM courses"
 );

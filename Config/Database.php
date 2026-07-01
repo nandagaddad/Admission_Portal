@@ -24,7 +24,8 @@ class Database
         }
         catch(PDOException $e)
         {
-            die("Connection Failed : " . $e->getMessage());
+            error_log("DB Connection Failed: " . $e->getMessage());
+            die("Service unavailable. Please try again later.");
         }
     }
 }

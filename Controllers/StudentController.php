@@ -66,7 +66,28 @@ class StudentController
     }
     public function index()
     {
-        $students = $this->student->getAll();
+        $page = filter_input(INPUT_GET, 'page', FILTER_VALIDATE_INT);
+        $limit = filter_input(INPUT_GET, 'limit', FILTER_VALIDATE_INT);
+
+        $allowedLimits = [5, 10, 20, 50];
+        $page = $page && $page > 0 ? $page : 1;
+        $limit = $limit && in_array($limit, $allowedLimits, true) ? $limit : 10;
+
+        $offset = ($page - 1) * $limit;
+
+        $students = $this->student->getAll($limit, $offset);
+        $totalStudents = $this->student->countAll();
+        $totalPages = $totalStudents > 0 ? (int) ceil($totalStudents / $limit) : 1;
+
+        if ($page > $totalPages) {
+            $page = $totalPages;
+            $offset = ($page - 1) * $limit;
+            $students = $this->student->getAll($limit, $offset);
+        }
+
+        $currentPage = $page;
+        $perPage = $limit;
+        $totalPagesCount = $totalPages;
 
         require "../Views/students/list.php";
     }

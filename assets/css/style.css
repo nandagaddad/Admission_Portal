@@ -29,4 +29,9 @@
         display: block;
     }
 }
-
+.hover-zoom {
+  transition: transform 0.3s ease-in-out; /* Smooth transition animation */
+}
+.hover-zoom:hover {
+  transform: scale(1.05); /* Enlarges the element by 5% */
+}

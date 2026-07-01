@@ -69,7 +69,7 @@ class Student
             ':semester' =>$data['semester']
         ]);
     }
-    public function getAll()
+    public function getAll($limit = null, $offset = 0)
     {
         $sql = "SELECT s.*, c.course_name, d.department_name
                 FROM students AS s
@@ -78,10 +78,29 @@ class Student
                 WHERE s.status = 1
                 ORDER BY s.id DESC";
 
+        if ($limit !== null) {
+            $sql .= " LIMIT :limit OFFSET :offset";
+        }
+
         $stmt = $this->conn->prepare($sql);
+
+        if ($limit !== null) {
+            $stmt->bindValue(':limit', (int) $limit, PDO::PARAM_INT);
+            $stmt->bindValue(':offset', (int) $offset, PDO::PARAM_INT);
+        }
+
         $stmt->execute();
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function countAll()
+    {
+        $sql = "SELECT COUNT(*) FROM students WHERE status = 1";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute();
+
+        return (int) $stmt->fetchColumn();
     }
     public function getDepartments($CourseID)
     {

@@ -8,8 +8,12 @@ require_once __DIR__ . '/../../Models/Course.php';
 $db = new Database();
 $conn = $db->connect();
 
-$studentModel = new Student($conn);
-$students = $studentModel->getAll();
+$studentModel = isset($studentModel) ? $studentModel : new Student($conn);
+$students = isset($students) ? $students : $studentModel->getAll();
+$currentPage = isset($currentPage) ? $currentPage : 1;
+$perPage = isset($perPage) ? $perPage : 10;
+$totalStudents = isset($totalStudents) ? $totalStudents : $studentModel->countAll();
+$totalPagesCount = isset($totalPagesCount) ? $totalPagesCount : ($totalStudents > 0 ? (int) ceil($totalStudents / $perPage) : 1);
 
 $Courses = $conn->query(
     "SELECT * FROM courses"
@@ -26,9 +30,10 @@ $Courses = $conn->query(
 
                 <div class="card shadow">
 
-                    <div class="card-header d-flex justify-content-between align-items-center">
-                        <h4>Students List</h4>
-                        <a href="../students/add.php" class="btn btn-primary"> Add Student </a>
+                    <div class="card-header d-flex ">
+                        <h4 class="me-auto">Students List</h4>
+                        <input type="text" id="searchInput" class="form-control w-25" placeholder="Search Students..." onkeyup="filterStudentList()">
+                        <a href="../students/add.php" class="btn btn-primary ms-2"> Add Student </a>
                     </div>
 
                 <div class="card-body">
@@ -41,9 +46,24 @@ $Courses = $conn->query(
                     <?php unset($_SESSION['success']); ?>
                     <?php endif; ?>
 
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div class="d-flex align-items-center">
+                            <span class="me-2 text-nowrap">Show</span>
+                            <form method="GET" action="../../Controllers/StudentController.php" class="d-flex align-items-center">
+                                <input type="hidden" name="page" value="1">
+                                <select name="limit" class="form-select form-select-sm" style="width: auto;" onchange="this.form.submit()">
+                                    <?php foreach ([5, 10, 20, 50] as $option): ?>
+                                        <option value="<?= $option ?>" <?= (int) $perPage === $option ? 'selected' : '' ?>><?= $option ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                                <span class="ms-2 text-nowrap">entries</span>
+                            </form>
+                        </div>
+                    </div>
+
                     <div class="table-responsive">
 
-                        <table class="table table-bordered table-hover">
+                        <table class="table table-bordered table-hover" id="StudentTable">
 
                             <thead class="table-dark">
                                 <tr>
@@ -69,7 +89,7 @@ $Courses = $conn->query(
                                 <?php if(!empty($students)): ?>
                                 <?php foreach($students as $student): ?>
 
-                                <tr>
+                                <tr data-search="<?php echo strtolower($student['first_name'] . ' ' . $student['last_name'] . ' ' . $student['course_name'] . ' '. $student['department_name']); ?>">
                                     <td><?= $student['id']; ?></td>
                                     <td><?= htmlspecialchars($student['application_no']); ?></td>
                                     <td><?= htmlspecialchars($student['first_name']." ".$student['last_name']); ?> </td>
@@ -130,6 +150,38 @@ $Courses = $conn->query(
 
                             </tbody>
                         </table>
+                        <div class="d-flex justify-content-between align-items-center mt-3">
+                            <div id="tableInfo" class="text-muted small">
+                                <?php if ($totalStudents > 0): ?>
+                                    Showing <?= (($currentPage - 1) * $perPage) + 1 ?> to <?= min($currentPage * $perPage, $totalStudents) ?> of <?= $totalStudents ?> entries
+                                <?php else: ?>
+                                    Showing 0 to 0 of 0 entries
+                                <?php endif; ?>
+                            </div>
+                            <nav aria-label="Student pagination">
+                                <ul class="pagination pagination-sm mb-0">
+                                    <li class="page-item <?= $currentPage <= 1 ? 'disabled' : '' ?>">
+                                        <?php if ($currentPage > 1): ?>
+                                            <a class="page-link" href="../../Controllers/StudentController.php?page=<?= $currentPage - 1 ?>&limit=<?= $perPage ?>">Previous</a>
+                                        <?php else: ?>
+                                            <span class="page-link">Previous</span>
+                                        <?php endif; ?>
+                                    </li>
+                                    <?php for ($i = 1; $i <= $totalPagesCount; $i++): ?>
+                                        <li class="page-item <?= $i === $currentPage ? 'active' : '' ?>">
+                                            <a class="page-link" href="../../Controllers/StudentController.php?page=<?= $i ?>&limit=<?= $perPage ?>"><?= $i ?></a>
+                                        </li>
+                                    <?php endfor; ?>
+                                    <li class="page-item <?= $currentPage >= $totalPagesCount ? 'disabled' : '' ?>">
+                                        <?php if ($currentPage < $totalPagesCount): ?>
+                                            <a class="page-link" href="../../Controllers/StudentController.php?page=<?= $currentPage + 1 ?>&limit=<?= $perPage ?>">Next</a>
+                                        <?php else: ?>
+                                            <span class="page-link">Next</span>
+                                        <?php endif; ?>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
                     </div>   
 
                 </div>
@@ -318,6 +370,114 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
+function filterStudentList() {
+    // Get the search query and convert to lowercase
+    const query = document.getElementById('searchInput').value.toLowerCase();
+    
+    // Target all table rows inside the tbody
+    const rows = document.querySelectorAll('#StudentTable tbody tr');
+
+    rows.forEach(row => {
+        // Read the pre-compiled searchable text from the data attribute
+        const searchableText = row.getAttribute('data-search');
+
+        // Check if the query exists anywhere inside first_name, last_name, or designation
+        if (searchableText.includes(query)) {
+            row.style.display = "";      // Show row
+        } else {
+            row.style.display = "none";  // Hide row
+        }
+    });
+}
 </script>
+<!--
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+    const table = document.getElementById("StudentTable");
+    const tbody = table.querySelector("tbody");
+    const rows = Array.from(tbody.querySelectorAll("tr"));
+    const maxRowsSelect = document.getElementById("maxRows");
+    const paginationWrapper = document.getElementById("paginationWrapper");
+    const tableInfo = document.getElementById("tableInfo");
+    
+    let currentPage = 1;
+
+    function displayTable() {
+        const rowsPerPage = parseInt(maxRowsSelect.value);
+        const totalRows = rows.length;
+        const totalPages = Math.ceil(totalRows / rowsPerPage);
+
+        // Normalize current page if rows per page changes drastically
+        if (currentPage > totalPages) currentPage = totalPages;
+        if (currentPage < 1) currentPage = 1;
+
+        // Hide all rows initially
+        rows.forEach(row => row.style.display = "none");
+
+        // Calculate start and end indices
+        const start = (currentPage - 1) * rowsPerPage;
+        const end = Math.min(start + rowsPerPage, totalRows);
+
+        // Show rows for the active page
+        for (let i = start; i < end; i++) {
+            if (rows[i]) rows[i].style.display = "";
+        }
+
+        // Update entry information text
+        tableInfo.textContent = totalRows > 0 
+            ? `Showing ${start + 1} to ${end} of ${totalRows} entries`
+            : "Showing 0 to 0 of 0 entries";
+
+        buildPagination(totalPages);
+    }
+
+    function buildPagination(totalPages) {
+        paginationWrapper.innerHTML = "";
+
+        if (totalPages <= 1) return; // No pagination buttons needed if only 1 page
+
+        // Previous Button
+        const prevLi = document.createElement("li");
+        prevLi.className = `page-item ${currentPage === 1 ? "disabled" : ""}`;
+        prevLi.innerHTML = `<a class="page-link" href="#" data-page="${currentPage - 1}">Previous</a>`;
+        paginationWrapper.appendChild(prevLi);
+
+        // Page Number Buttons
+        for (let i = 1; i <= totalPages; i++) {
+            const li = document.createElement("li");
+            li.className = `page-item ${currentPage === i ? "active" : ""}`;
+            li.innerHTML = `<a class="page-link" href="#" data-page="${i}">${i}</a>`;
+            paginationWrapper.appendChild(li);
+        }
+
+        // Next Button
+        const nextLi = document.createElement("li");
+        nextLi.className = `page-item ${currentPage === totalPages ? "disabled" : ""}`;
+        nextLi.innerHTML = `<a class="page-link" href="#" data-page="${currentPage + 1}">Next</a>`;
+        paginationWrapper.appendChild(nextLi);
+    }
+
+    // Event listener for pagination clicks
+    paginationWrapper.addEventListener("click", function (e) {
+        e.preventDefault();
+        const targetPage = parseInt(e.target.getAttribute("data-page"));
+        if (targetPage && targetPage !== currentPage) {
+            currentPage = targetPage;
+            displayTable();
+        }
+    });
+
+    // Event listener for dropdown rows change
+    maxRowsSelect.addEventListener("change", function () {
+        currentPage = 1;
+        displayTable();
+    });
+
+    // Initial load
+    displayTable();
+});
+</script>
+                                -->                          
 
 <?php include __DIR__ . '/../layouts/footer.php'; ?>

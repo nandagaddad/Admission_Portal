@@ -37,7 +37,7 @@ $recentAdmissions = $DashboardModel->getRecentAdmissions();
             <?php endif; ?>
 
             <!-- Main content-->
-            <div class="container-fluid py-3">
+            <div class="container-fluid py-2">
                 <div class="row mb-4">
                     <div class="col">
                         <h2 class="fs-2">Welcome to Administration Portal</h2>
@@ -47,7 +47,7 @@ $recentAdmissions = $DashboardModel->getRecentAdmissions();
                     </div>
                     
                     <div class="col-auto text-end">
-                        <h6 class="text-muted">
+                        <h6 class="text-muted d-none d-lg-block  hover-zoom">
                             <i class="bi bi-calendar3 me-2"></i>
                             <?= date("l, d F Y"); ?>
                         </h6>
@@ -57,7 +57,7 @@ $recentAdmissions = $DashboardModel->getRecentAdmissions();
                     <div class="row g-4 mb-4">
 
                         <div class="col-xl-3 col-md-6 ">
-                            <div class="card shadow-sm h-100">
+                            <div class="card shadow-sm h-100 hover-zoom">
                                 <a href="../students/list.php" style="text-decoration: none; color: inherit;">
                                 <div class="card-body">
                                     <div class="d-flex justify-content-between">
@@ -76,7 +76,7 @@ $recentAdmissions = $DashboardModel->getRecentAdmissions();
                         </div>
 
                         <div class="col-xl-3 col-md-6">
-                            <div class="card shadow-sm h-100">
+                            <div class="card shadow-sm h-100 hover-zoom">
                                 <a href="../Courses/list.php" style="text-decoration: none; color: inherit;">
                                 <div class="card-body">
                                     <div class="d-flex justify-content-between">
@@ -86,7 +86,7 @@ $recentAdmissions = $DashboardModel->getRecentAdmissions();
                                             <small class="text-muted">Available Courses</small>
                                         </div>
                                         <div class="align-self-center">
-                                            <i class="bi bi-book-fill text-success fs-1"></i>
+                                            <i class="bi bi-book-half text-success fs-1"></i>
                                         </div>
                                     </div>
                                 </div>
@@ -95,7 +95,7 @@ $recentAdmissions = $DashboardModel->getRecentAdmissions();
                         </div>
 
                         <div class="col-xl-3 col-md-6">
-                            <div class="card shadow-sm h-100">
+                            <div class="card shadow-sm h-100 hover-zoom">
                                 <a href="../Courses/list.php" style="text-decoration: none; color: inherit;">
                                 <div class="card-body">
                                     <div class="d-flex justify-content-between">
@@ -114,7 +114,7 @@ $recentAdmissions = $DashboardModel->getRecentAdmissions();
                         </div>
 
                         <div class="col-xl-3 col-md-6">
-                            <div class="card shadow-sm h-100">
+                            <div class="card shadow-sm h-100 hover-zoom">
                                 <a href="../Staff/listStaff.php" style="text-decoration: none; color: inherit;">
                                 <div class="card-body">
                                     <div class="d-flex justify-content-between">
@@ -142,10 +142,10 @@ $recentAdmissions = $DashboardModel->getRecentAdmissions();
                                 <h5 class="mb-0"><i class="bi bi-lightning-fill"></i>Quick Actions</h5>
                             </div>
                             <div class="card-body d-grid gap-3 pb-4">
-                                <a href="../students/add.php" class="btn btn-primary"><i class="bi bi-person-plus-fill"></i> Add Student</a>
-                                <a href="../Courses/addCourses.php" class="btn btn-success"><i class="bi bi-book-fill"></i> Add Course</a>
-                                <a href="../Staff/addStaff.php" class="btn btn-warning text-white"><i class="bi bi-person-workspace"></i> Add Staff</a>
-                                <a href="../students/list.php" class="btn btn-info text-white"><i class="bi bi-eye-fill"></i> View Students</a>
+                                <a href="../students/add.php" class="btn btn-primary hover-zoom"><i class="bi bi-person-plus-fill"></i> Add Student</a>
+                                <a href="../Courses/addCourses.php" class="btn btn-success hover-zoom"><i class="bi bi-book-half"></i> Add Course</a>
+                                <a href="../Staff/addStaff.php" class="btn btn-warning text-white hover-zoom"><i class="bi bi-person-workspace"></i> Add Staff</a>
+                                <a href="../students/list.php" class="btn btn-info text-white hover-zoom"><i class="bi bi-eye-fill"></i> View Students</a>
                             </div>
                         </div>
                     </div>
@@ -201,6 +201,49 @@ window.admissionChartData = {
     labels: <?= json_encode(array_column($admissionStats, 'year'), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>,
     values: <?= json_encode(array_map('intval', array_column($admissionStats, 'total')), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>
 };
+document.addEventListener('DOMContentLoaded', function () {
+    const ctx = document.getElementById('admissionChart');
+    if (!ctx || !window.admissionChartData) {
+        return;
+    }
+
+    new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: window.admissionChartData.labels,
+            datasets: [{
+                label: 'Admissions by Year',
+                data: window.admissionChartData.values,
+                backgroundColor: [
+                    '#4e73df',
+                    '#1cc88a',
+                    '#36b9cc',
+                    '#f6c23e',
+                    '#e74a3b',
+                    '#858796'
+                ],
+                hoverOffset: 6
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                },
+                title: {
+                    display: true,
+                    text: 'Student Admissions by Year',
+                    font: {
+                        size: 16
+                    }
+                }
+            }
+        }
+    });
+});
+
 </script>
 
 <?php include '../layouts/footer.php'; ?>

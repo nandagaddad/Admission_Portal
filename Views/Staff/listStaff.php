@@ -40,15 +40,16 @@ $Courses = $conn->query(
                     <?php unset($_SESSION['error']); ?>
                 <?php endif; ?>
 
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <h4>Staff List</h4>
-                    <a href="../Staff/addStaff.php" class="btn btn-primary"> Add Staff </a>
+                <div class="card-header d-flex">
+                    <h4 class="me-auto">Staff List</h4>
+                    <input type="text" id="searchInput" class="form-control w-25" placeholder="Search Staff..." onkeyup="filterStaffList()">
+                    <a href="../Staff/addStaff.php" class="btn btn-primary ms-2"> Add Staff </a>
                 </div>
 
                 <div class="card-body">
                     <div class="table-responsive">
 
-                        <table class="table table-bordered table-hover">
+                        <table class="table table-bordered table-hover" id="staffTable">
 
                             <thead class="table-dark">
                                 <tr>
@@ -72,7 +73,7 @@ $Courses = $conn->query(
                                 <?php if(!empty($staffs)): ?>
                                 <?php foreach($staffs as $staff): ?>
 
-                                <tr>
+                                <tr data-search="<?php echo strtolower($staff['first_name'] . ' ' . $staff['last_name'] . ' ' . $staff['designation'] . ' ' . $staff['course_name'] . ' '. $staff['department_name']); ?>">
                                     <td><?= $staff['id']; ?></td>
                                     <td><?= htmlspecialchars($staff['staff_id']); ?></td>
                                     <td><?= htmlspecialchars($staff['first_name']." ".$staff['last_name']); ?> </td>
@@ -299,6 +300,25 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
+function filterStaffList() {
+    // Get the search query and convert to lowercase
+    const query = document.getElementById('searchInput').value.toLowerCase();
+    
+    // Target all table rows inside the tbody
+    const rows = document.querySelectorAll('#staffTable tbody tr');
+
+    rows.forEach(row => {
+        // Read the pre-compiled searchable text from the data attribute
+        const searchableText = row.getAttribute('data-search');
+
+        // Check if the query exists anywhere inside first_name, last_name, or designation
+        if (searchableText.includes(query)) {
+            row.style.display = "";      // Show row
+        } else {
+            row.style.display = "none";  // Hide row
+        }
+    });
+}
 
 </script>
 
