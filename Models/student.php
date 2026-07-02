@@ -84,6 +84,7 @@ class Student
                 AND (
                     s.first_name LIKE :search
                     OR s.last_name LIKE :search
+                    OR s.admission_year LIKE :search
                     OR c.course_name LIKE :search
                     OR d.department_name LIKE :search
                 )
@@ -130,8 +131,9 @@ class Student
                 AND (
                     s.first_name LIKE :search1
                     OR s.last_name LIKE :search2
+                    OR s.admission_year LIKE :search5
                     OR c.course_name LIKE :search3
-                    OR d.department_name LIKE :search4
+                    OR d.department_name LIKE :search4 
                 )
             ";
         }
@@ -143,6 +145,7 @@ class Student
             $stmt->bindValue(":search2","%".$search."%");
             $stmt->bindValue(":search3","%".$search."%");
             $stmt->bindValue(":search4","%".$search."%");
+            $stmt->bindValue(":search5","%".$search."%");
         }
         
         $stmt->execute();

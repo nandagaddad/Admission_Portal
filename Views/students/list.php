@@ -98,7 +98,7 @@ $Courses = $conn->query(
                                 <?php if(!empty($students)): ?>
                                 <?php foreach($students as $student): ?>
 
-                                <tr data-search="<?php echo strtolower($student['first_name'] . ' ' . $student['last_name'] . ' ' . $student['course_name'] . ' '. $student['department_name']); ?>">
+                                <tr>
                                     <td><?= $student['id']; ?></td>
                                     <td><?= htmlspecialchars($student['application_no']); ?></td>
                                     <td><?= htmlspecialchars($student['first_name']." ".$student['last_name']); ?> </td>
@@ -383,25 +383,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-function filterStudentList() {
-    // Get the search query and convert to lowercase
-    const query = document.getElementById('searchInput').value.toLowerCase();
-    
-    // Target all table rows inside the tbody
-    const rows = document.querySelectorAll('#StudentTable tbody tr');
-
-    rows.forEach(row => {
-        // Read the pre-compiled searchable text from the data attribute
-        const searchableText = row.getAttribute('data-search');
-
-        // Check if the query exists anywhere inside first_name, last_name, or designation
-        if (searchableText.includes(query)) {
-            row.style.display = "";      // Show row
-        } else {
-            row.style.display = "none";  // Hide row
-        }
-    });
-}
 
 function changePageLimit(limit)
 {
