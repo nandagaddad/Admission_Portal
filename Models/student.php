@@ -69,14 +69,28 @@ class Student
             ':semester' =>$data['semester']
         ]);
     }
-    public function getAll($limit = null, $offset = 0)
+
+    public function getAll($limit = null, $offset = 0, $search="")
     {
         $sql = "SELECT s.*, c.course_name, d.department_name
                 FROM students AS s
                 LEFT JOIN courses AS c ON c.id = s.course_id
                 LEFT JOIN departments AS d ON d.id = s.department_id
-                WHERE s.status = 1
-                ORDER BY s.id DESC";
+                WHERE s.status = 1";
+
+        if($search != "")
+        {
+            $sql .= "
+                AND (
+                    s.first_name LIKE :search
+                    OR s.last_name LIKE :search
+                    OR c.course_name LIKE :search
+                    OR d.department_name LIKE :search
+                )
+            ";
+        }
+
+        $sql .= " ORDER BY s.id DESC";
 
         if ($limit !== null) {
             $sql .= " LIMIT :limit OFFSET :offset";
@@ -89,15 +103,48 @@ class Student
             $stmt->bindValue(':offset', (int) $offset, PDO::PARAM_INT);
         }
 
+        if($search != "")
+        {
+            $stmt->bindValue(
+                ":search",
+                "%".$search."%"
+            );
+        }
+
         $stmt->execute();
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function countAll()
+    public function countAll($search="")
     {
-        $sql = "SELECT COUNT(*) FROM students WHERE status = 1";
+        $sql = "SELECT COUNT(*)
+                FROM students AS s
+                LEFT JOIN courses AS c ON c.id = s.course_id
+                LEFT JOIN departments AS d ON d.id = s.department_id
+                WHERE s.status = 1";
+
+        if($search != "")
+        {
+            $sql .= "
+                AND (
+                    s.first_name LIKE :search1
+                    OR s.last_name LIKE :search2
+                    OR c.course_name LIKE :search3
+                    OR d.department_name LIKE :search4
+                )
+            ";
+        }
         $stmt = $this->conn->prepare($sql);
+
+        if($search != "")
+        {
+            $stmt->bindValue(":search1","%".$search."%");
+            $stmt->bindValue(":search2","%".$search."%");
+            $stmt->bindValue(":search3","%".$search."%");
+            $stmt->bindValue(":search4","%".$search."%");
+        }
+        
         $stmt->execute();
 
         return (int) $stmt->fetchColumn();

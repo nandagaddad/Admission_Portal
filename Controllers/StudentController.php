@@ -64,32 +64,52 @@ class StudentController
         header('Content-Type: application/json');
         echo json_encode($departments);
     }
+    public function getAll($limit = null, $offset = 0)
+    {
+        $studentslist = $this->student->getAll($limit, $offset);
+        return $studentslist;
+
+    }
     public function index()
+    {
+        
+    }
+    public function getStudentListData()
     {
         $page = filter_input(INPUT_GET, 'page', FILTER_VALIDATE_INT);
         $limit = filter_input(INPUT_GET, 'limit', FILTER_VALIDATE_INT);
 
+        $search = trim($_GET['search'] ?? '');
+
         $allowedLimits = [5, 10, 20, 50];
-        $page = $page && $page > 0 ? $page : 1;
-        $limit = $limit && in_array($limit, $allowedLimits, true) ? $limit : 10;
+
+        $page = ($page && $page > 0) ? $page : 1;
+        $limit = ($limit && in_array($limit, $allowedLimits, true)) ? $limit : 10;
 
         $offset = ($page - 1) * $limit;
 
-        $students = $this->student->getAll($limit, $offset);
-        $totalStudents = $this->student->countAll();
-        $totalPages = $totalStudents > 0 ? (int) ceil($totalStudents / $limit) : 1;
+        $students = $this->student->getAll($limit, $offset, $search);
 
-        if ($page > $totalPages) {
-            $page = $totalPages;
+        $totalStudents = $this->student->countAll($search);
+
+        $totalPagesCount = ($totalStudents > 0)
+            ? (int) ceil($totalStudents / $limit)
+            : 1;
+
+        if ($page > $totalPagesCount) {
+            $page = $totalPagesCount;
             $offset = ($page - 1) * $limit;
             $students = $this->student->getAll($limit, $offset);
         }
 
-        $currentPage = $page;
-        $perPage = $limit;
-        $totalPagesCount = $totalPages;
-
-        require "../Views/students/list.php";
+        return [
+            'students' => $students,
+            'search'=>$search,
+            'currentPage' => $page,
+            'perPage' => $limit,
+            'totalStudents' => $totalStudents,
+            'totalPagesCount' => $totalPagesCount
+        ];
     }
     public function getYear()
     {
